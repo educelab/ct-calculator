@@ -213,8 +213,9 @@
 <div class="container">
     <div class="sidebar">
         <div>
-            <h1>CT Pixel Calculator</h1>
-            <p style="font-size: 0.8rem; color: #64748b;">Estimate voxel resolution based on object size and machine intrinsics.</p>
+            <h1>EduceLab CT Pixel Calculator</h1>
+            <p style="font-size: 0.8rem; color: #64748b;">Estimate voxel size based on object size and machine intrinsics.</p>
+            <p style="font-size: 0.8rem; color: #64748b;">These are theoretical estimates only. The true voxel size will also depend on sample fixturing and system calibration. Preloaded CT Systems are those available in the EduceLab.</p>
         </div>
 
         <div class="divider"></div>
@@ -250,9 +251,9 @@
         </div>
 
         <div class="form-group">
-            <label for="safetyMargin">Safety Margin (% of width)</label>
+            <label for="safetyMargin">Detector Margin (%)</label>
             <input type="number" id="safetyMargin" value="5" min="0" max="50" step="1" oninput="calculate()">
-            <small style="color:#64748b; font-size:0.75rem;">Space to leave at detector edges</small>
+            <small style="color:#64748b; font-size:0.75rem;">Percentage of the detector width to leave as margin around the sample. This value is divided among both edges (e.g. 10% becomes 5% margins on the left and right).</small>
         </div>
 
         <div id="autoControls">
