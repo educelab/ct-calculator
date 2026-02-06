@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cone Beam CT Geometry Calculator</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #f1f5f9;
+            padding: 25px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h1 { font-size: 1.25rem; margin: 0 0 10px 0; color: var(--primary); }
+        h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 10px; }
+
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500; }
+        
+        select, input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            box-sizing: border-box; 
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+        input[type="checkbox"] { width: auto; }
+
+        .divider { height: 1px; background: var(--border); margin: 10px 0; }
+        
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px dashed #94a3b8;
+            color: #64748b;
+        }
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: #eff6ff;
+        }
+
+        /* Mode Switcher */
+        .mode-switch {
+            display: flex;
+            background: #e2e8f0;
+            padding: 4px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .mode-btn {
+            flex: 1;
+            padding: 8px;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #64748b;
+        }
+        .mode-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .metric-card {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 200px;
+        }
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: block;
+        }
+        .metric-label { font-size: 0.85rem; color: #64748b; }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .detail-item {
+            background: var(--bg);
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+        .detail-item strong { display: block; font-size: 1.1rem; }
+        .detail-item span { font-size: 0.8rem; color: #64748b; }
+
+        /* Canvas */
+        .canvas-container {
+            width: 100%;
+            height: 300px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            position: relative;
+        }
+        canvas { width: 100%; height: 100%; }
+
+        /* Alerts */
+        .alert {
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: none;
+            margin-top: 10px;
+        }
+        .alert.visible { display: block; }
+        .alert-warning { background: #fffbeb; color: #92400e; border: 1px solid #fcd34d; }
+        .alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+        .alert-success { background: #ecfdf5; color: #047857; border: 1px solid #6ee7b7; }
+
+        .system-params-details {
+            font-size: 0.75rem;
+            color: #64748b;
+            background: #e2e8f0;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="sidebar">
+        <div>
+            <h1>CT Pixel Calculator</h1>
+            <p style="font-size: 0.8rem; color: #64748b;">Estimate voxel resolution based on object size and machine intrinsics.</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="form-group">
+            <label for="systemSelect">CT System</label>
+            <select id="systemSelect" onchange="loadSystemPreset()">
+                </select>
+            
+            <div id="systemParamsDisplay" class="system-params-details">
+                </div>
+        </div>
+
+        <div style="margin-top: -10px; margin-bottom: 10px;">
+            <input type="file" id="jsonInput" accept=".json" style="display: none;" onchange="handleFileUpload(this)">
+            <button class="btn btn-outline" onclick="document.getElementById('jsonInput').click()">
+                📂 Load Config JSON
+            </button>
+            <div id="uploadMsg" style="font-size: 0.75rem; margin-top: 5px; color: var(--success); display:none;">Successfully loaded!</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <h2>Calculation Mode</h2>
+        <div class="mode-switch">
+            <div id="btnModeAuto" class="mode-btn active" onclick="setMode('auto')">Auto-Optimize</div>
+            <div id="btnModeManual" class="mode-btn" onclick="setMode('manual')">Manual</div>
+        </div>
+
+        <div class="form-group">
+            <label for="objectDiameter">Object Diameter (mm)</label>
+            <input type="number" id="objectDiameter" value="50" step="1" oninput="calculate()">
+        </div>
+
+        <div id="autoControls">
+            <div class="checkbox-group" id="doubleWideContainer">
+                <input type="checkbox" id="doubleWide" onchange="calculate()">
+                <label for="doubleWide">Double-Wide (Offset) Mode</label>
+            </div>
+            <div class="checkbox-group" style="margin-top: 10px;">
+                <input type="checkbox" id="forceMaxSdd" checked onchange="calculate()">
+                <label for="forceMaxSdd">Force Max SDD (Sharpness)</label>
+            </div>
+        </div>
+
+        <div id="manualControls" style="display: none;">
+             <div class="form-group">
+                <label for="manualSOD">Source-Object Distance (SOD) mm</label>
+                <input type="number" id="manualSOD" value="100" oninput="calculate()">
+            </div>
+            <div class="form-group">
+                <label for="manualSDD">Source-Detector Distance (SDD) mm</label>
+                <input type="number" id="manualSDD" value="1000" oninput="calculate()">
+            </div>
+            <div class="checkbox-group" id="manualDoubleWideContainer">
+                <input type="checkbox" id="manualDoubleWide" onchange="calculate()">
+                <label for="manualDoubleWide">Double-Wide (Offset) Mode</label>
+            </div>
+        </div>
+        
+        <div id="customInputs" style="display:none; margin-top: 20px;">
+            <h2>Manual Intrinsics</h2>
+            <div class="form-group"><label>Detector Pixel Pitch (mm)</label><input type="number" id="c_pitch" value="0.127" step="0.001"></div>
+            <div class="form-group"><label>Detector Width (px)</label><input type="number" id="c_width" value="2000"></div>
+            <div class="form-group"><label>Min SOD (mm)</label><input type="number" id="c_minSOD" value="10"></div>
+            <div class="form-group"><label>Max SOD (mm)</label><input type="number" id="c_maxSOD" value="800"></div>
+            <div class="form-group"><label>Max SDD (mm)</label><input type="number" id="c_maxSDD" value="1000"></div>
+            <div class="checkbox-group" style="margin-bottom: 10px;">
+                <input type="checkbox" id="c_allowDW" checked>
+                <label for="c_allowDW">Supports Double-Wide</label>
+            </div>
+            <button class="btn btn-primary" onclick="applyCustom()">Apply Manual Settings</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="results-header">
+            <div>
+                <h2 style="color: var(--text);">Projected Resolution</h2>
+                <div class="metric-value" id="resResult">--</div>
+                <div class="metric-label" id="magResult">at --x Magnification</div>
+            </div>
+            
+            <div class="metric-card">
+                <span style="font-size:0.8rem; color:#64748b;">Scan Field of View</span>
+                <strong style="display:block; font-size:1.4rem; color:#1e293b;" id="fovResult">-- mm</strong>
+            </div>
+        </div>
+
+        <div id="warnAlert" class="alert alert-warning"></div>
+        <div id="errAlert" class="alert alert-error"></div>
+
+        <div class="divider"></div>
+
+        <h2>Geometry Settings</h2>
+        <div class="details-grid">
+            <div class="detail-item">
+                <span id="sodLabel">Source to Object (SOD)</span>
+                <strong id="sodResult">-- mm</strong>
+            </div>
+            <div class="detail-item">
+                <span>Source to Detector (SDD)</span>
+                <strong id="sddResult">-- mm</strong>
+            </div>
+            <div class="detail-item">
+                <span>Effective Det. Width</span>
+                <strong id="detWidthResult">-- mm</strong>
+            </div>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="geoCanvas"></canvas>
+            <div style="position: absolute; bottom: 10px; right: 10px; font-size: 0.75rem; color: #94a3b8;">
+                *Visualisation not to scale
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // --- 1. Global State & Presets ---
+    let calculationMode = 'auto'; // 'auto' or 'manual'
+
+    const systems = {
+        generic: {
+            name: "Generic Lab Micro-CT",
+            pixelPitch: 0.127,
+            widthPx: 2048,
+            minSOD: 20,
+            maxSOD: 800,
+            minSDD: 300,
+            maxSDD: 1000,
+            allowDoubleWide: true,
+            overlapPx: 150
+        },
+        skyscan1273: {
+            name: "Bruker Skyscan 1273",
+            pixelPitch: 0.0748,
+            widthPx: 3072,
+            minSOD: 13,
+            maxSOD: 500,
+            minSDD: 500,
+            maxSDD: 500,
+            allowDoubleWide: true,
+            overlapPx: 1152
+        },
+        custom: {} 
+    };
+
+    let currentSystem = { ...systems.generic };
+
+    // --- 2. Mode Switching ---
+    function setMode(mode) {
+        calculationMode = mode;
+        
+        // Update Buttons
+        document.getElementById('btnModeAuto').className = mode === 'auto' ? 'mode-btn active' : 'mode-btn';
+        document.getElementById('btnModeManual').className = mode === 'manual' ? 'mode-btn active' : 'mode-btn';
+
+        // Toggle Controls
+        document.getElementById('autoControls').style.display = mode === 'auto' ? 'block' : 'none';
+        document.getElementById('manualControls').style.display = mode === 'manual' ? 'block' : 'none';
+
+        calculate();
+    }
+
+    // --- 3. Dropdown & Input Handling ---
+    function populateDropdown(selectedId = 'generic') {
+        const select = document.getElementById('systemSelect');
+        select.innerHTML = ''; 
+        for (const [key, sys] of Object.entries(systems)) {
+            if (key === 'custom') continue; 
+            const option = document.createElement('option');
+            option.value = key;
+            option.text = sys.name || key;
+            select.appendChild(option);
+        }
+        const customOpt = document.createElement('option');
+        customOpt.value = 'custom';
+        customOpt.text = 'Manual Configuration...';
+        select.appendChild(customOpt);
+        select.value = selectedId;
+    }
+
+    function loadSystemPreset() {
+        const val = document.getElementById('systemSelect').value;
+        const customDiv = document.getElementById('customInputs');
+        const dwContainerAuto = document.getElementById('doubleWideContainer');
+        const dwContainerManual = document.getElementById('manualDoubleWideContainer');
+        
+        if (val === 'custom') {
+            customDiv.style.display = 'block';
+            document.getElementById('c_pitch').value = currentSystem.pixelPitch || systems.generic.pixelPitch;
+            document.getElementById('c_width').value = currentSystem.widthPx || systems.generic.widthPx;
+            document.getElementById('c_minSOD').value = currentSystem.minSOD || systems.generic.minSOD;
+            document.getElementById('c_maxSOD').value = currentSystem.maxSOD || systems.generic.maxSOD;
+            document.getElementById('c_maxSDD').value = currentSystem.maxSDD || systems.generic.maxSDD;
+            document.getElementById('c_allowDW').checked = currentSystem.hasOwnProperty('allowDoubleWide') ? currentSystem.allowDoubleWide : true;
+        } else {
+            customDiv.style.display = 'none';
+            currentSystem = { ...systems[val] };
+        }
+
+        // Handle Double Wide Visibility
+        const display = currentSystem.allowDoubleWide ? 'flex' : 'none';
+        dwContainerAuto.style.display = display;
+        dwContainerManual.style.display = display;
+        
+        if (!currentSystem.allowDoubleWide) {
+            document.getElementById('doubleWide').checked = false;
+            document.getElementById('manualDoubleWide').checked = false;
+        }
+
+        updateSystemParamsDisplay();
+        calculate();
+    }
+
+    function applyCustom() {
+        currentSystem = {
+            name: "Manual Configuration",
+            pixelPitch: parseFloat(document.getElementById('c_pitch').value),
+            widthPx: parseInt(document.getElementById('c_width').value),
+            minSOD: parseFloat(document.getElementById('c_minSOD').value),
+            maxSOD: parseFloat(document.getElementById('c_maxSOD').value),
+            minSDD: 300, 
+            maxSDD: parseFloat(document.getElementById('c_maxSDD').value),
+            allowDoubleWide: document.getElementById('c_allowDW').checked,
+            overlapPx: 100
+        };
+        loadSystemPreset(); // Refresh UI visibility logic
+    }
+
+    function handleFileUpload(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const json = JSON.parse(e.target.result);
+                validateAndLoadSystem(json);
+            } catch (err) {
+                alert("Invalid JSON file: " + err.message);
+            }
+        };
+        reader.readAsText(file);
+        input.value = ''; 
+    }
+
+    function validateAndLoadSystem(data) {
+        const requiredKeys = ['pixelPitch', 'widthPx', 'minSOD', 'maxSOD', 'maxSDD'];
+        const missing = requiredKeys.filter(key => data[key] === undefined);
+        if (missing.length > 0) {
+            alert("JSON is missing required fields: " + missing.join(', '));
+            return;
+        }
+        const sysId = 'imported_' + Date.now();
+        if (!data.name) data.name = "Imported System";
+        if (data.allowDoubleWide === undefined) data.allowDoubleWide = false;
+
+        systems[sysId] = data;
+        populateDropdown(sysId);
+        loadSystemPreset();
+        const msg = document.getElementById('uploadMsg');
+        msg.style.display = 'block';
+        setTimeout(() => msg.style.display = 'none', 3000);
+    }
+
+    function updateSystemParamsDisplay() {
+        const div = document.getElementById('systemParamsDisplay');
+        const dwText = currentSystem.allowDoubleWide ? "Yes" : "No";
+        div.innerHTML = `
+            <strong>${currentSystem.name}</strong><br>
+            Panel: ${currentSystem.widthPx}px @ ${currentSystem.pixelPitch}mm<br>
+            Travel: SOD(${currentSystem.minSOD}-${currentSystem.maxSOD}), OffsetScan: ${dwText}
+        `;
+    }
+
+    // --- 4. The Mathematics (Solver) ---
+    function calculate() {
+        const objDiameter = parseFloat(document.getElementById('objectDiameter').value);
+        if (!objDiameter || objDiameter <= 0) return;
+
+        const warnEl = document.getElementById('warnAlert');
+        const errEl = document.getElementById('errAlert');
+        warnEl.classList.remove('visible');
+        errEl.classList.remove('visible');
+        warnEl.textContent = "";
+        errEl.textContent = "";
+
+        // Determine detector width based on mode and checkbox
+        let isDoubleWide = false;
+        if (calculationMode === 'auto') {
+            isDoubleWide = document.getElementById('doubleWide').checked;
+        } else {
+            isDoubleWide = document.getElementById('manualDoubleWide').checked;
+        }
+
+        // Validate double wide availability
+        if (isDoubleWide && !currentSystem.allowDoubleWide) isDoubleWide = false;
+
+        let activePixels = currentSystem.widthPx;
+        if (isDoubleWide) {
+            activePixels = (currentSystem.widthPx * 2) - (currentSystem.overlapPx || 100);
+        }
+        const physDetWidth = activePixels * currentSystem.pixelPitch;
+
+        let targetSOD, targetSDD, finalMag;
+
+        // --- BRANCH LOGIC ---
+        if (calculationMode === 'auto') {
+            // AUTO MODE LOGIC
+            const forceMaxSdd = document.getElementById('forceMaxSdd').checked;
+            
+            const maxMagFOV = physDetWidth / objDiameter;
+            const maxMagSys = currentSystem.maxSDD / currentSystem.minSOD;
+
+            let limitingFactor = ""; 
+            if (maxMagFOV < maxMagSys) {
+                finalMag = maxMagFOV;
+                limitingFactor = "fov"; 
+            } else {
+                finalMag = maxMagSys;
+                limitingFactor = "travel"; 
+            }
+
+            targetSDD = currentSystem.maxSDD;
+            targetSOD = targetSDD / finalMag;
+
+            // Clamp SOD
+            if (targetSOD < currentSystem.minSOD) {
+                targetSOD = currentSystem.minSOD;
+            } else if (targetSOD > currentSystem.maxSOD) {
+                targetSOD = currentSystem.maxSOD;
+                targetSDD = targetSOD * finalMag; 
+            }
+
+            // Warnings
+            if (limitingFactor === "travel") {
+                warnEl.textContent = "Note: Resolution is limited by system travel (Min SOD), not object size.";
+                warnEl.classList.add('visible');
+            }
+
+        } else {
+            // MANUAL MODE LOGIC
+            targetSOD = parseFloat(document.getElementById('manualSOD').value);
+            targetSDD = parseFloat(document.getElementById('manualSDD').value);
+
+            // Basic validation
+            if (!targetSOD || !targetSDD) return;
+
+            // Travel Validation
+            if (targetSOD < currentSystem.minSOD || targetSOD > currentSystem.maxSOD) {
+                warnEl.innerHTML += `Warning: SOD is outside system limits (${currentSystem.minSOD} - ${currentSystem.maxSOD} mm).<br>`;
+                warnEl.classList.add('visible');
+            }
+            if (targetSDD > currentSystem.maxSDD) { // Usually strict max
+                 warnEl.innerHTML += `Warning: SDD exceeds system max (${currentSystem.maxSDD} mm).<br>`;
+                 warnEl.classList.add('visible');
+            }
+            if (targetSOD >= targetSDD) {
+                 errEl.textContent = "Error: Object must be between Source and Detector (SOD < SDD).";
+                 errEl.classList.add('visible');
+            }
+
+            finalMag = targetSDD / targetSOD;
+        }
+
+        // --- COMMON RESULTS ---
+        const effPixel = currentSystem.pixelPitch / finalMag;
+        const fov = physDetWidth / finalMag; 
+
+        // Collision Check
+        if (targetSOD + (objDiameter/2) > targetSDD) {
+            errEl.textContent = "Error: Object collision! The object is too large or too close to the detector.";
+            errEl.classList.add('visible');
+        }
+
+        // FOV Check (Manual Mode Only - did user cut off the object?)
+        if (calculationMode === 'manual' && objDiameter > fov) {
+             errEl.textContent = `Error: Object (${objDiameter}mm) is larger than Field of View (${fov.toFixed(1)}mm).`;
+             errEl.classList.add('visible');
+        }
+
+        // Update UI
+        document.getElementById('resResult').textContent = (effPixel * 1000).toFixed(2) + " µm";
+        document.getElementById('magResult').textContent = "at " + finalMag.toFixed(2) + "x Magnification";
+        document.getElementById('fovResult').textContent = fov.toFixed(1) + " mm";
+        document.getElementById('sodResult').textContent = targetSOD.toFixed(1) + " mm";
+        document.getElementById('sddResult').textContent = targetSDD.toFixed(1) + " mm";
+        document.getElementById('detWidthResult').textContent = physDetWidth.toFixed(1) + " mm";
+
+        drawVisualizer(targetSOD, targetSDD, objDiameter, physDetWidth);
+    }
+
+    // --- 5. Canvas Visualizer ---
+    function drawVisualizer(sod, sdd, objDiam, detWidth) {
+        const canvas = document.getElementById('geoCanvas');
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width = canvas.offsetWidth;
+        const h = canvas.height = canvas.offsetHeight;
+
+        ctx.clearRect(0, 0, w, h);
+
+        const padding = 40;
+        const scaleY = (h - (padding * 2)) / sdd;
+        const scaleX = (w - (padding * 2)) / detWidth;
+        const scale = Math.min(scaleY, scaleX);
+
+        const centerX = w / 2;
+        const sourceY = padding; 
+        const detY = sourceY + (sdd * scale);
+        const objY = sourceY + (sod * scale);
+
+        // 1. Draw Axis
+        ctx.beginPath();
+        ctx.setLineDash([5, 5]);
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.moveTo(centerX, sourceY);
+        ctx.lineTo(centerX, detY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // 2. Draw Source
+        ctx.fillStyle = "#f59e0b";
+        ctx.beginPath();
+        ctx.arc(centerX, sourceY, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 3. Draw Detector
+        const detPxWidth = detWidth * scale;
+        ctx.fillStyle = "#334155";
+        ctx.fillRect(centerX - (detPxWidth/2), detY, detPxWidth, 6);
+        
+        // 4. Draw Object
+        const objPxRadius = (objDiam * scale) / 2;
+        ctx.fillStyle = "rgba(37, 99, 235, 0.3)"; 
+        ctx.strokeStyle = "#2563eb";
+        ctx.beginPath();
+        ctx.arc(centerX, objY, objPxRadius, 0, Math.PI*2);
+        ctx.fill();
+        ctx.stroke();
+
+        // 5. Draw Cone Beam
+        ctx.strokeStyle = "rgba(245, 158, 11, 0.4)";
+        ctx.beginPath();
+        ctx.moveTo(centerX, sourceY);
+        ctx.lineTo(centerX - (detPxWidth/2), detY);
+        ctx.moveTo(centerX, sourceY);
+        ctx.lineTo(centerX + (detPxWidth/2), detY);
+        ctx.stroke();
+
+        // Labels
+        ctx.fillStyle = "#64748b";
+        ctx.font = "12px sans-serif";
+        ctx.fillText("Source", centerX + 10, sourceY + 5);
+        ctx.fillText("Detector", centerX + (detPxWidth/2) + 5, detY + 5);
+        ctx.fillStyle = "#2563eb";
+        ctx.fillText("Object", centerX + objPxRadius + 5, objY + 5);
+    }
+
+    // Init
+    window.addEventListener('resize', calculate);
+    populateDropdown(); 
+    loadSystemPreset(); 
+
+</script>
+
+</body>
+</html>
