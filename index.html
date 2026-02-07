@@ -421,10 +421,6 @@
                 <input type="checkbox" id="doubleWide" onchange="calculate()">
                 <label for="doubleWide">Double-Wide (Offset)</label>
             </div>
-            <div class="checkbox-group" style="margin-top: 10px;">
-                <input type="checkbox" id="forceMaxSdd" checked onchange="calculate()">
-                <label for="forceMaxSdd">Force Max SDD</label>
-            </div>
         </div>
 
         <div id="manualControls" style="display: none;">
@@ -650,7 +646,9 @@
         if (mode === 'manual' && calculationMode === 'auto') {
             const objDiameter = parseFloat(document.getElementById('objectDiameter').value);
             const marginPercent = parseFloat(document.getElementById('safetyMargin').value) || 0;
-            const isDoubleWide = document.getElementById('doubleWide').checked;
+            let isDoubleWide = document.getElementById('doubleWide').checked;
+            
+            if (isDoubleWide && !currentSystem.allowDoubleWide) isDoubleWide = false;
 
             if (objDiameter > 0) {
                 let activePixels = currentSystem.widthPx;
@@ -659,6 +657,7 @@
                 }
                 const physDetWidth = activePixels * currentSystem.pixelPitch;
                 const usableDetWidth = physDetWidth * (1 - (marginPercent / 100));
+                
                 const maxMagFOV = usableDetWidth / objDiameter;
                 const maxMagSys = currentSystem.maxSDD / currentSystem.minSOD;
                 
@@ -671,6 +670,12 @@
                 } else if (targetSOD > currentSystem.maxSOD) {
                     targetSOD = currentSystem.maxSOD;
                     targetSDD = targetSOD * finalMag; 
+                }
+
+                if (targetSDD < currentSystem.minSDD) {
+                    targetSDD = currentSystem.minSDD;
+                } else if (targetSDD > currentSystem.maxSDD) {
+                    targetSDD = currentSystem.maxSDD;
                 }
                 
                 document.getElementById('manualSOD').value = targetSOD.toFixed(2);
@@ -858,8 +863,8 @@
         if (calculationMode === 'auto') {
             const maxMagFOV = usableDetWidth / objDiameter;
             const maxMagSys = currentSystem.maxSDD / currentSystem.minSOD;
-            const forceMaxSdd = document.getElementById('forceMaxSdd').checked;
-
+            // Force Max SDD switch removed, assuming default logic
+            
             let limitingFactor = ""; 
             if (maxMagFOV < maxMagSys) {
                 finalMag = maxMagFOV;
@@ -869,15 +874,28 @@
                 limitingFactor = "travel"; 
             }
 
+            // 1. Start with standard calculation
             targetSDD = currentSystem.maxSDD;
             targetSOD = targetSDD / finalMag;
 
+            // 2. Clamp SOD (Source-Object Distance)
             if (targetSOD < currentSystem.minSOD) {
                 targetSOD = currentSystem.minSOD;
             } else if (targetSOD > currentSystem.maxSOD) {
                 targetSOD = currentSystem.maxSOD;
                 targetSDD = targetSOD * finalMag; 
             }
+
+            // 3. Clamp SDD (Source-Detector Distance) - STRICT PHYSICAL LIMITS
+            if (targetSDD < currentSystem.minSDD) {
+                targetSDD = currentSystem.minSDD;
+            } else if (targetSDD > currentSystem.maxSDD) {
+                targetSDD = currentSystem.maxSDD;
+            }
+
+            // 4. Recalculate Final Magnification
+            // Since we may have clamped both SOD and SDD, the mag is simply the result of where they are now.
+            finalMag = targetSDD / targetSOD;
 
             if (limitingFactor === "travel") {
                 warnMsgs.push("Note: Resolution is limited by system travel (Min SOD), not object size.");
@@ -895,6 +913,9 @@
             if (targetSDD > currentSystem.maxSDD) { 
                  warnMsgs.push(`Warning: SDD exceeds system max (${currentSystem.maxSDD} mm).`);
             }
+            if (targetSDD < currentSystem.minSDD) {
+                 warnMsgs.push(`Warning: SDD is below system min (${currentSystem.minSDD} mm).`);
+            }
             if (targetSOD >= targetSDD) {
                  errorMsgs.push("Error: Object must be between Source and Detector (SOD < SDD).");
             }
@@ -911,14 +932,13 @@
             errorMsgs.push("Error: Object collision! The object is too large or too close to the detector.");
         }
 
-        if (calculationMode === 'manual') {
-            if (objDiameter > fov) {
-                 errorMsgs.push(`Error: Object (${objDiameter}mm) is larger than Field of View (${fov.toFixed(1)}mm).`);
-            } else if (objDiameter > usableFOV) {
-                 warnMsgs.push(`Warning: Object fits, but violates your ${marginPercent}% safety margin.`);
-            }
+        // Add 0.001mm tolerance for floating point rounding errors
+        if (objDiameter > fov + 0.001) {
+             errorMsgs.push(`Error: Object (${objDiameter}mm) is larger than Field of View (${fov.toFixed(1)}mm).`);
+        } else if (objDiameter > usableFOV + 0.001) {
+             warnMsgs.push(`Warning: Object fits, but violates your ${marginPercent}% safety margin.`);
         }
-
+        
         const warnEl = document.getElementById('warnAlert');
         const errEl = document.getElementById('errAlert');
         
