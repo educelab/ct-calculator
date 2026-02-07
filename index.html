@@ -27,7 +27,7 @@
             --warning: #f59e0b;
         }
 
-        /* Dark Mode Variables (Neutral/Matte Gray) */
+        /* Dark Mode Variables */
         [data-theme="dark"] {
             color-scheme: dark;
             --primary: #60a5fa;
@@ -60,10 +60,10 @@
             align-items: center;
             min-height: 100vh;
             transition: background-color 0.2s, color 0.2s;
-            position: relative; /* For toggle positioning */
+            position: relative;
         }
 
-        /* Global Theme Toggle (Top Right of Page) */
+        /* Theme Toggle */
         .theme-toggle-btn {
             position: absolute;
             top: 20px;
@@ -84,11 +84,7 @@
             color: var(--text);
             background-color: rgba(128, 128, 128, 0.1);
         }
-        .theme-toggle-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
+        .theme-toggle-btn svg { width: 20px; height: 20px; fill: currentColor; }
 
         .container {
             display: grid;
@@ -102,10 +98,9 @@
             overflow: hidden;
             border: 1px solid var(--border);
             transition: border-color 0.2s, background-color 0.2s;
-            margin-top: 20px; /* Space for toggle if on mobile */
+            margin-top: 20px;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             background-color: var(--sidebar-bg);
             padding: 24px;
@@ -124,7 +119,6 @@
         .form-group { margin-bottom: 15px; }
         label { display: block; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500; color: var(--text); }
         
-        /* Inputs */
         select, input[type="number"], input[type="text"] {
             width: 100%;
             padding: 8px 12px;
@@ -149,15 +143,10 @@
             font-size: 0.9rem;
             color: var(--text);
         }
-        input[type="checkbox"] { 
-            width: 16px; 
-            height: 16px; 
-            accent-color: var(--primary);
-        }
+        input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); }
 
         .divider { height: 1px; background: var(--border); margin: 10px 0; transition: background 0.2s; }
         
-        /* Buttons */
         .btn {
             width: 100%;
             padding: 10px;
@@ -182,7 +171,6 @@
             background: rgba(37, 99, 235, 0.05);
         }
 
-        /* Mode Switcher */
         .mode-switch {
             display: flex;
             background: var(--border);
@@ -208,7 +196,6 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        /* Main Content */
         .main-content {
             padding: 30px;
             display: flex;
@@ -216,20 +203,10 @@
             gap: 20px;
         }
 
-        /* Hero Result */
-        .hero-section {
-            text-align: center;
-            padding-bottom: 10px;
-        }
-        .metric-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: var(--primary);
-            line-height: 1.1;
-        }
+        .hero-section { text-align: center; padding-bottom: 10px; }
+        .metric-value { font-size: 2.5rem; font-weight: 700; color: var(--primary); line-height: 1.1; }
         .metric-label { font-size: 1rem; color: var(--text-secondary); margin-top: 5px; }
 
-        /* Geometry Bar */
         .geometry-bar {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -240,89 +217,111 @@
             border: 1px solid var(--panel-border);
             transition: background 0.2s, border 0.2s;
         }
-
         .geo-stat { text-align: center; }
-        .geo-stat span {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 4px;
-        }
-        .geo-stat strong {
-            display: block;
-            font-size: 1.1rem;
-            color: var(--text);
-        }
+        .geo-stat span { display: block; font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+        .geo-stat strong { display: block; font-size: 1.1rem; color: var(--text); }
 
-        /* Sampling Panel */
-        .sampling-container { margin-top: 10px; }
-
-        .sampling-panel {
+        .panel-container { margin-top: 10px; }
+        
+        .calc-panel {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
             border-radius: 8px;
             padding: 20px;
             display: grid;
-            grid-template-columns: repeat(4, 1fr); 
             gap: 20px;
             font-size: 0.85rem;
             transition: background 0.2s, border 0.2s;
         }
-        .sampling-stat {
+
+        .sampling-grid { grid-template-columns: repeat(4, 1fr); }
+        
+        /* Updated Spot Grid for spacing control */
+        .spot-grid { 
+            grid-template-columns: 1fr;
+            gap: 0; /* Remove default gap to control spacing via margin/padding */
+        } 
+
+        .spot-header-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 15px; /* Matches padding-top of bars container */
+            align-items: start; 
+        }
+
+        .panel-stat {
             text-align: center;
             border-right: 1px solid var(--border);
             padding: 0 10px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
         }
-        .sampling-stat:last-child { border-right: none; }
+        .panel-stat:last-child { border-right: none; }
         
-        .sampling-stat strong {
-            display: block;
-            font-size: 1.1rem;
-            color: var(--primary);
-            margin: 6px 0;
-        }
-        .sampling-stat span.label {
-            color: var(--text-secondary); 
-            text-transform: uppercase; 
-            font-size: 0.7rem; 
-            letter-spacing: 0.05em; 
-            font-weight: 700;
-        }
-        .sampling-stat div.sub {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-        .sampling-stat div.res {
-            font-size: 0.8rem;
-            color: var(--success); 
+        .panel-stat strong { display: block; font-size: 1.1rem; color: var(--primary); margin: 6px 0; }
+        .panel-stat span.label { color: var(--text-secondary); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; font-weight: 700; }
+        .panel-stat div.sub { font-size: 0.8rem; color: var(--text-secondary); }
+        .panel-stat div.res { font-size: 0.8rem; color: var(--success); font-weight: 600; margin-top: 5px; }
+        
+        .limit-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
             font-weight: 600;
-            margin-top: 5px;
+            margin-top: 8px;
         }
+        .limit-ok { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .limit-warn { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
 
-        /* Custom Input Wrapper */
-        .custom-input-wrapper {
+        .custom-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 5px; margin: 5px 0; }
+        .panel-stat input { width: 70px; padding: 4px 6px; font-size: 0.95rem; text-align: center; height: 30px; }
+
+        /* Resolution Bar Visualization */
+        .res-bars-container {
+            border-top: 1px solid var(--border);
+            padding-top: 15px; /* Matches margin-bottom of header */
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .res-bar-row {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 5px;
-            margin: 5px 0;
+            font-size: 0.8rem;
+            color: var(--text);
         }
-        /* Custom Input Styling (Subtle) */
-        .sampling-stat input {
-            width: 70px;
-            padding: 4px 6px;
-            font-size: 0.95rem;
-            text-align: center;
-            height: 30px;
-            /* Matches other inputs by inheriting base styles */
+        .res-bar-label {
+            width: 100px;
+            font-weight: 600;
+            color: var(--text-secondary);
         }
+        .res-bar-track {
+            flex: 1;
+            height: 12px;
+            background: var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .res-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+        .res-bar-value {
+            width: 60px;
+            text-align: right;
+            font-family: monospace;
+            font-weight: 600;
+        }
+        
+        .fill-blue { background-color: var(--primary); }
+        .fill-amber { background-color: var(--warning); }
 
-        /* Canvas */
+
         .canvas-container {
             width: 100%;
             height: 300px;
@@ -334,7 +333,6 @@
         }
         canvas { width: 100%; height: 100%; }
 
-        /* Alerts */
         .alert {
             padding: 12px;
             border-radius: 6px;
@@ -361,11 +359,12 @@
         }
 
         @media (max-width: 900px) {
-            .container { grid-template-columns: 1fr; margin-top: 60px; /* Space for toggle */ }
+            .container { grid-template-columns: 1fr; margin-top: 60px; }
             .geometry-bar { grid-template-columns: 1fr 1fr; }
-            .sampling-panel { grid-template-columns: 1fr 1fr; gap: 20px; }
-            .sampling-stat { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
-            .sampling-stat:nth-last-child(-n+2) { border-bottom: none; }
+            .sampling-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+            .spot-header-row { grid-template-columns: 1fr; gap: 0; }
+            .panel-stat { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px; }
+            .panel-stat:last-child { border-bottom: none; margin-bottom: 0; }
         }
     </style>
 </head>
@@ -385,10 +384,14 @@
         <div class="form-group">
             <label for="systemSelect">CT System</label>
             <select id="systemSelect" onchange="loadSystemPreset()">
-                </select>
-            
-            <div id="systemParamsDisplay" class="system-params-details">
-                </div>
+            </select>
+            <div id="systemParamsDisplay" class="system-params-details"></div>
+        </div>
+
+        <div class="form-group" id="spotModeGroup">
+            <label for="spotModeSelect">X-Ray Spot Mode</label>
+            <select id="spotModeSelect" onchange="calculate()">
+            </select>
         </div>
 
         <div style="margin-top: -5px; margin-bottom: 15px;">
@@ -448,6 +451,7 @@
             <h2>Manual Intrinsics</h2>
             <div class="form-group"><label>Pixel Pitch (mm)</label><input type="number" id="c_pitch" value="0.127" step="0.001"></div>
             <div class="form-group"><label>Detector Width (px)</label><input type="number" id="c_width" value="2000"></div>
+            <div class="form-group"><label>Spot Size (mm)</label><input type="number" id="c_spotSize" value="0.04" step="0.001"></div>
             <div class="form-group"><label>Min SOD (mm)</label><input type="number" id="c_minSOD" value="10"></div>
             <div class="form-group"><label>Max SOD (mm)</label><input type="number" id="c_maxSOD" value="800"></div>
             <div class="form-group"><label>Max SDD (mm)</label><input type="number" id="c_maxSDD" value="1000"></div>
@@ -463,7 +467,7 @@
     <div class="main-content">
         
         <div class="hero-section">
-            <h2 style="margin-bottom: 5px;">Projected Pixel Size</h2>
+            <h2 style="margin-bottom: 5px;">Projected Pixel Size (Voxel)</h2>
             <div class="metric-value" id="resResult">--</div>
             <div class="metric-label" id="magResult">at --x Magnification</div>
         </div>
@@ -497,28 +501,28 @@
         <div id="warnAlert" class="alert alert-warning"></div>
         <div id="errAlert" class="alert alert-error"></div>
 
-        <div class="sampling-container">
+        <div class="panel-container">
             <h3>Sampling Strategy</h3>
-            <div class="sampling-panel">
-                <div class="sampling-stat">
+            <div class="calc-panel sampling-grid">
+                <div class="panel-stat">
                     <span class="label">Nyquist Limit (1x)</span>
                     <strong id="stepSize1x">--°</strong>
                     <div class="sub" id="projections1x">-- Proj</div>
                     <div class="res" id="res1x">Res: --</div>
                 </div>
-                <div class="sampling-stat">
+                <div class="panel-stat">
                     <span class="label">High Quality (2x)</span>
                     <strong id="stepSize2x">--°</strong>
                     <div class="sub" id="projections2x">-- Proj</div>
                     <div class="res" id="res2x">Res: --</div>
                 </div>
-                <div class="sampling-stat">
+                <div class="panel-stat">
                     <span class="label">Fast Scan (3x)</span>
                     <strong id="stepSize3x">--°</strong>
                     <div class="sub" id="projections3x">-- Proj</div>
                     <div class="res" id="res3x">Res: --</div>
                 </div>
-                <div class="sampling-stat">
+                <div class="panel-stat">
                     <span class="label">Custom Step</span>
                     <div class="custom-input-wrapper">
                         <input type="number" id="customStep" step="0.01" value="0.25" oninput="calculate()">
@@ -530,13 +534,55 @@
             </div>
         </div>
 
+        <div class="panel-container">
+            <h3>Source Unsharpness & Effective Resolution</h3>
+            <div class="calc-panel spot-grid">
+                
+                <div class="spot-header-row">
+                    <div class="panel-stat">
+                        <span class="label">Nominal Spot Size</span>
+                        <strong id="spotSizeDisplay">-- µm</strong>
+                        <div class="sub" id="spotModeDisplay">Mode: --</div>
+                    </div>
+                    <div class="panel-stat">
+                        <span class="label">Geometric Unsharpness (Ug)</span>
+                        <strong id="ugResult">-- µm</strong>
+                        <div class="sub">Blur at Object Plane</div>
+                    </div>
+                    <div class="panel-stat">
+                        <span class="label">Total Effective Resolution</span>
+                        <strong id="totalResResult">-- µm</strong>
+                        <div class="sub">Sqrt(Voxel² + Ug²)</div>
+                        <div id="limitingFactorBadge" class="limit-badge">--</div>
+                    </div>
+                </div>
+
+                <div class="res-bars-container">
+                    <div class="res-bar-row">
+                        <div class="res-bar-label">Voxel Size</div>
+                        <div class="res-bar-track">
+                            <div class="res-bar-fill fill-blue" id="barVoxel" style="width: 0%"></div>
+                        </div>
+                        <div class="res-bar-value" id="valVoxel">--</div>
+                    </div>
+                    
+                    <div class="res-bar-row">
+                        <div class="res-bar-label">Penumbra</div>
+                        <div class="res-bar-track">
+                            <div class="res-bar-fill fill-amber" id="barUg" style="width: 0%"></div>
+                        </div>
+                        <div class="res-bar-value" id="valUg">--</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 </div>
 
 <script>
     // --- 0. Theme Logic & Icons ---
-    
-    // Simple SVG Icons
     const iconSun = `<svg viewBox="0 0 24 24"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" /></svg>`;
     const iconMoon = `<svg viewBox="0 0 24 24"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z" clip-rule="evenodd" /></svg>`;
 
@@ -550,10 +596,9 @@
         const next = current === 'dark' ? 'light' : 'dark';
         body.setAttribute('data-theme', next);
         updateThemeIcon(next === 'dark');
-        calculate(); // Redraw canvas
+        calculate(); 
     }
     
-    // Init
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.body.setAttribute('data-theme', 'dark');
         updateThemeIcon(true);
@@ -561,9 +606,8 @@
         updateThemeIcon(false);
     }
 
-
     // --- 1. Global State & Presets ---
-    let calculationMode = 'auto'; // 'auto' or 'manual'
+    let calculationMode = 'auto'; 
 
     const systems = {
         waygatem300: {
@@ -576,7 +620,11 @@
             maxSDD: 805,
             allowDoubleWide: false,
             overlapPx: 0,
-            maxObjectDiameter: 300
+            spotModes: [
+                { name: "Nano Focus (<10W)", size: 0.005 },
+                { name: "Micro Focus (Std)", size: 0.020 },
+                { name: "High Power", size: 0.050 }
+            ]
         },
         skyscan1273: {
             name: "Bruker Skyscan 1273",
@@ -588,9 +636,13 @@
             maxSDD: 500,
             allowDoubleWide: true,
             overlapPx: 1152,
-            maxObjectDiameter: 250
+            maxObjectDiameter: 250,
+             spotModes: [
+                { name: "High Res", size: 0.005 },
+                { name: "Standard", size: 0.020 }
+            ]
         },
-        custom: {} 
+        custom: { spotModes: [] } 
     };
 
     const firstSystemKey = Object.keys(systems)[0];
@@ -604,7 +656,6 @@
             const isDoubleWide = document.getElementById('doubleWide').checked;
 
             if (objDiameter > 0) {
-                // Pre-fill manual values
                 let activePixels = currentSystem.widthPx;
                 if (isDoubleWide && currentSystem.allowDoubleWide) {
                     activePixels = (currentSystem.widthPx * 2) - (currentSystem.overlapPx || 100);
@@ -665,11 +716,15 @@
     function loadSystemPreset() {
         const val = document.getElementById('systemSelect').value;
         const customDiv = document.getElementById('customInputs');
+        const spotSelect = document.getElementById('spotModeSelect');
+        const spotGroup = document.getElementById('spotModeGroup');
         const dwContainerAuto = document.getElementById('doubleWideContainer');
         const dwContainerManual = document.getElementById('manualDoubleWideContainer');
         
         if (val === 'custom') {
             customDiv.style.display = 'block';
+            spotGroup.style.display = 'none'; 
+            
             document.getElementById('c_pitch').value = currentSystem.pixelPitch || systems[Object.keys(systems)[0]].pixelPitch;
             document.getElementById('c_width').value = currentSystem.widthPx || systems[Object.keys(systems)[0]].widthPx;
             document.getElementById('c_minSOD').value = currentSystem.minSOD || systems[Object.keys(systems)[0]].minSOD;
@@ -677,9 +732,24 @@
             document.getElementById('c_maxSDD').value = currentSystem.maxSDD || systems[Object.keys(systems)[0]].maxSDD;
             document.getElementById('c_maxDiam').value = currentSystem.maxObjectDiameter || "";
             document.getElementById('c_allowDW').checked = currentSystem.hasOwnProperty('allowDoubleWide') ? currentSystem.allowDoubleWide : true;
+            document.getElementById('c_spotSize').value = 0.040; 
+            
+            currentSystem = { ...systems['custom'] }; 
+            
         } else {
             customDiv.style.display = 'none';
+            spotGroup.style.display = 'block';
             currentSystem = { ...systems[val] };
+            
+            spotSelect.innerHTML = '';
+            if (currentSystem.spotModes) {
+                currentSystem.spotModes.forEach((mode, index) => {
+                    const opt = document.createElement('option');
+                    opt.value = mode.size;
+                    opt.text = `${mode.name} (${mode.size * 1000}µm)`;
+                    spotSelect.appendChild(opt);
+                });
+            }
         }
 
         const display = currentSystem.allowDoubleWide ? 'flex' : 'none';
@@ -705,7 +775,7 @@
             maxSDD: parseFloat(document.getElementById('c_maxSDD').value),
             maxObjectDiameter: parseFloat(document.getElementById('c_maxDiam').value) || null,
             allowDoubleWide: document.getElementById('c_allowDW').checked,
-            overlapPx: 100
+            overlapPx: 100,
         };
         loadSystemPreset(); 
     }
@@ -873,34 +943,52 @@
 
         // SAMPLING CALCULATIONS
         const effPixelUm = effPixel * 1000;
-        
-        // 1. Nyquist (1x)
         const angularStepRad = effPixel / (objDiameter / 2);
         const angularStepDeg = angularStepRad * (180 / Math.PI);
         const numProjections = Math.ceil(360 / angularStepDeg);
-
-        // 2. Recommended (2x)
         const numProjectionsRec = Math.ceil(numProjections / 2);
         const angularStepDegRec = 360 / numProjectionsRec;
-
-        // 3. Fast (3x)
         const numProjectionsFast = Math.ceil(numProjections / 3);
         const angularStepDegFast = 360 / numProjectionsFast;
 
-        // 4. Custom
         const customStep = parseFloat(document.getElementById('customStep').value);
         let customProj = "--";
         let customRes = "--";
         if (customStep > 0) {
             customProj = Math.ceil(360 / customStep);
-            
-            // Calc eff resolution based on custom step
             const arcLength = (objDiameter / 2) * (customStep * (Math.PI / 180));
             const effResVal = Math.max(effPixel, arcLength);
             customRes = (effResVal * 1000).toFixed(1) + " µm";
         }
 
-        // Update UI
+        // --- UNSHARPNESS CALCULATIONS ---
+        let spotSizeMm = 0;
+        let spotModeName = "Manual";
+        
+        const sysVal = document.getElementById('systemSelect').value;
+        if (sysVal === 'custom') {
+            spotSizeMm = parseFloat(document.getElementById('c_spotSize').value) || 0;
+        } else {
+            const spotSelect = document.getElementById('spotModeSelect');
+            spotSizeMm = parseFloat(spotSelect.value);
+            spotModeName = spotSelect.options[spotSelect.selectedIndex].text.split('(')[0].trim();
+        }
+
+        const UgMm = spotSizeMm * (1 - (1/finalMag));
+        const UgUm = UgMm * 1000;
+        const totalResUm = Math.sqrt(Math.pow(effPixelUm, 2) + Math.pow(UgUm, 2));
+
+        let limitText = "";
+        let limitClass = "";
+        if (UgUm > effPixelUm * 1.1) {
+             limitText = "Limited by Spot Size";
+             limitClass = "limit-warn";
+        } else {
+             limitText = "Limited by Voxel";
+             limitClass = "limit-ok";
+        }
+
+        // Update UI Text
         document.getElementById('resResult').textContent = effPixelUm.toFixed(2) + " µm";
         document.getElementById('magResult').textContent = "at " + finalMag.toFixed(2) + "x Magnification";
         document.getElementById('fovResult').textContent = fov.toFixed(1) + " mm";
@@ -908,7 +996,6 @@
         document.getElementById('sddResult').textContent = targetSDD.toFixed(1) + " mm";
         document.getElementById('detWidthResult').textContent = physDetWidth.toFixed(1) + " mm";
 
-        // Update Sampling UI
         document.getElementById('stepSize1x').textContent = angularStepDeg.toFixed(3) + "°";
         document.getElementById('projections1x').textContent = numProjections + " Proj";
         document.getElementById('res1x').textContent = "Res: " + effPixelUm.toFixed(1) + " µm";
@@ -923,6 +1010,29 @@
 
         document.getElementById('projectionsCustom').textContent = customProj + " Proj";
         document.getElementById('resCustom').textContent = "Res: " + customRes;
+        
+        document.getElementById('spotSizeDisplay').textContent = (spotSizeMm * 1000).toFixed(0) + " µm";
+        document.getElementById('spotModeDisplay').textContent = "Mode: " + spotModeName;
+        document.getElementById('ugResult').textContent = UgUm.toFixed(2) + " µm";
+        document.getElementById('totalResResult').textContent = totalResUm.toFixed(2) + " µm";
+        
+        const badge = document.getElementById('limitingFactorBadge');
+        badge.textContent = limitText;
+        badge.className = "limit-badge " + limitClass;
+
+        // Update Horizontal Bars
+        const maxVal = Math.max(effPixelUm, UgUm);
+        // Use 1.1x multiplier so the largest bar is ~90% width
+        const scale = 1.1; 
+        
+        const pctVoxel = Math.min(100, (effPixelUm / (maxVal * scale)) * 100);
+        const pctUg = Math.min(100, (UgUm / (maxVal * scale)) * 100);
+
+        document.getElementById('barVoxel').style.width = pctVoxel + "%";
+        document.getElementById('valVoxel').textContent = effPixelUm.toFixed(1) + "µm";
+        
+        document.getElementById('barUg').style.width = pctUg + "%";
+        document.getElementById('valUg').textContent = UgUm.toFixed(1) + "µm";
 
         drawVisualizer(targetSOD, targetSDD, objDiameter, physDetWidth, marginPercent);
     }
@@ -934,18 +1044,18 @@
         const w = canvas.width = canvas.offsetWidth;
         const h = canvas.height = canvas.offsetHeight;
         
-        // Theme Detection inside drawing loop
         const isDark = document.body.getAttribute('data-theme') === 'dark';
 
         // High contrast palette
         const colAxis = isDark ? "#525252" : "#cbd5e1";
         const colDet = isDark ? "#404040" : "#cbd5e1";
-        const colSource = "#f59e0b";
+        const colSource = "#f59e0b"; // Bright Amber
         const colObjFill = isDark ? "rgba(96, 165, 250, 0.2)" : "rgba(37, 99, 235, 0.3)";
         const colObjStroke = isDark ? "#60a5fa" : "#2563eb";
         const colShadow = isDark ? "rgba(255, 255, 255, 0.2)" : "rgba(15, 23, 42, 0.8)";
         const colBeam = isDark ? "rgba(245, 158, 11, 0.2)" : "rgba(245, 158, 11, 0.4)";
         const colText = isDark ? "#a3a3a3" : "#64748b";
+        const colSafety = isDark ? "#ef4444" : "#dc2626"; // Solid Red
 
         ctx.clearRect(0, 0, w, h);
 
@@ -970,23 +1080,23 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Source
+        // Source Point
         ctx.fillStyle = colSource;
         ctx.beginPath();
         ctx.arc(centerX, sourceY, 6, 0, Math.PI * 2);
         ctx.fill();
 
         // Detector
-        const detX = centerX - (detPxWidth/2);
+        const detLeftX = centerX - (detPxWidth/2);
         ctx.fillStyle = colDet; 
-        ctx.fillRect(detX, detY, detPxWidth, 8);
+        ctx.fillRect(detLeftX, detY, detPxWidth, 8);
         
-        // Margins
+        // Safety Margins
         if (marginPercent > 0) {
             const sideMarginPx = (detPxWidth * (marginPercent / 100)) / 2;
-            ctx.fillStyle = isDark ? "rgba(248, 113, 113, 0.4)" : "rgba(239, 68, 68, 0.6)"; 
-            ctx.fillRect(detX, detY, sideMarginPx, 8);
-            ctx.fillRect(detX + detPxWidth - sideMarginPx, detY, sideMarginPx, 8);
+            ctx.fillStyle = colSafety; 
+            ctx.fillRect(detLeftX, detY, sideMarginPx, 8);
+            ctx.fillRect(detLeftX + detPxWidth - sideMarginPx, detY, sideMarginPx, 8);
         }
 
         // Object
@@ -998,7 +1108,7 @@
         ctx.fill();
         ctx.stroke();
 
-        // Shadow
+        // Shadow (Simple)
         const magnification = sdd / sod;
         const shadowRealWidth = objDiam * magnification;
         const shadowPxWidth = shadowRealWidth * scale;
@@ -1010,16 +1120,16 @@
         ctx.strokeStyle = colBeam;
         ctx.beginPath();
         ctx.moveTo(centerX, sourceY);
-        ctx.lineTo(detX, detY); 
+        ctx.lineTo(detLeftX, detY); 
         ctx.moveTo(centerX, sourceY);
-        ctx.lineTo(detX + detPxWidth, detY); 
+        ctx.lineTo(detLeftX + detPxWidth, detY); 
         ctx.stroke();
 
         // Labels
         ctx.fillStyle = colText;
         ctx.font = "12px sans-serif";
         ctx.fillText("Source", centerX + 10, sourceY + 5);
-        ctx.fillText("Detector", detX + detPxWidth + 5, detY + 5);
+        ctx.fillText("Detector", detLeftX + detPxWidth + 5, detY + 5);
         ctx.fillStyle = colObjStroke;
         ctx.fillText("Object", centerX + objPxRadius + 5, objY + 5);
 
@@ -1040,7 +1150,6 @@
             } else if (type === 'rect') {
                 ctx.fillRect(legendX, legendY + 2, 12, 8);
             }
-            
             ctx.fillStyle = colText;
             ctx.fillText(text, legendX + 18, legendY + 10);
             legendY += lineHeight;
@@ -1050,7 +1159,7 @@
         drawLegendItem(colObjStroke, "Object", "circle");
         
         if (marginPercent > 0) {
-            drawLegendItem(isDark ? "rgba(248, 113, 113, 0.4)" : "rgba(239, 68, 68, 0.6)", "Safety Margin", "rect");
+            drawLegendItem(colSafety, "Safety Margin", "rect");
         }
         
         drawLegendItem(colShadow, "Proj. Shadow", "rect");
