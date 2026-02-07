@@ -31,30 +31,32 @@
 
         .container {
             display: grid;
-            grid-template-columns: 350px 1fr;
-            gap: 20px;
+            grid-template-columns: 320px 1fr; /* Slightly wider sidebar */
+            gap: 0; 
             max-width: 1200px;
             width: 100%;
             background: var(--card-bg);
             border-radius: 12px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             overflow: hidden;
+            border: 1px solid var(--border);
         }
 
         /* Sidebar Styles */
         .sidebar {
             background-color: #f1f5f9;
-            padding: 25px;
+            padding: 25px; /* Restored padding */
             border-right: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 18px; /* Restored gap */
         }
 
-        h1 { font-size: 1.25rem; margin: 0 0 10px 0; color: var(--primary); }
-        h2 { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 10px; }
+        h1 { font-size: 1.2rem; margin: 0 0 8px 0; color: var(--primary); }
+        h2 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 10px; margin-top: 5px; }
+        p { margin: 0; line-height: 1.5; }
 
-        .form-group { margin-bottom: 15px; }
+        .form-group { margin-bottom: 12px; }
         label { display: block; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500; }
         
         select, input[type="number"], input[type="text"] {
@@ -74,7 +76,7 @@
         }
         input[type="checkbox"] { width: auto; }
 
-        .divider { height: 1px; background: var(--border); }
+        .divider { height: 1px; background: var(--border); margin: 8px 0; }
         
         /* Buttons */
         .btn {
@@ -127,10 +129,10 @@
 
         /* Main Content Styles */
         .main-content {
-            padding: 30px;
+            padding: 30px; /* Restored padding */
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 25px; /* Restored gap */
         }
 
         .results-header {
@@ -152,28 +154,93 @@
             font-weight: 700;
             color: var(--primary);
             display: block;
+            line-height: 1.2;
         }
         .metric-label { font-size: 0.85rem; color: #64748b; }
 
         .details-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 15px;
         }
 
         .detail-item {
             background: var(--bg);
-            padding: 10px;
+            padding: 12px 15px;
             border-radius: 6px;
             border: 1px solid var(--border);
         }
         .detail-item strong { display: block; font-size: 1.1rem; }
         .detail-item span { font-size: 0.8rem; color: #64748b; }
 
+        /* Sampling Panel */
+        .sampling-panel {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 15px;
+            font-size: 0.85rem;
+        }
+        .sampling-stat {
+            text-align: center;
+            border-right: 1px solid #e2e8f0;
+            padding: 0 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .sampling-stat:last-child { border-right: none; }
+        
+        .sampling-stat strong {
+            display: block;
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin: 4px 0;
+        }
+        .sampling-stat span.label {
+            color: #64748b; 
+            text-transform: uppercase; 
+            font-size: 0.7rem; 
+            letter-spacing: 0.05em; 
+            font-weight: 700;
+        }
+        .sampling-stat div.sub {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+        .sampling-stat div.res {
+            font-size: 0.8rem;
+            color: #059669; 
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* Custom Input Styling */
+        .custom-input-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin: 4px 0;
+        }
+        .custom-input-wrapper input {
+            width: 70px;
+            padding: 4px 6px;
+            font-size: 0.95rem;
+            text-align: center;
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+            height: 30px;
+        }
+
         /* Canvas */
         .canvas-container {
             width: 100%;
-            height: 300px;
+            height: 280px; /* Slightly taller */
             background: #fff;
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -192,7 +259,6 @@
         .alert.visible { display: block; }
         .alert-warning { background: #fffbeb; color: #92400e; border: 1px solid #fcd34d; }
         .alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-        .alert-success { background: #ecfdf5; color: #047857; border: 1px solid #6ee7b7; }
 
         .system-params-details {
             font-size: 0.75rem;
@@ -200,11 +266,15 @@
             background: #e2e8f0;
             padding: 10px;
             border-radius: 4px;
-            margin-top: 10px;
+            margin-top: 8px;
+            line-height: 1.4;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .container { grid-template-columns: 1fr; }
+            .sampling-panel { grid-template-columns: 1fr 1fr; gap: 20px; }
+            .sampling-stat { border-right: none; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; }
+            .sampling-stat:nth-last-child(-n+2) { border-bottom: none; }
         }
     </style>
 </head>
@@ -227,7 +297,7 @@
                 </div>
         </div>
 
-        <div style="margin-top: -10px; margin-bottom: 10px;">
+        <div style="margin-top: -5px; margin-bottom: 15px;">
             <input type="file" id="jsonInput" accept=".json" style="display: none;" onchange="handleFileUpload(this)">
             <button class="btn btn-outline" onclick="document.getElementById('jsonInput').click()">
                 📂 Load Config JSON
@@ -257,42 +327,42 @@
         <div id="autoControls">
             <div class="checkbox-group" id="doubleWideContainer">
                 <input type="checkbox" id="doubleWide" onchange="calculate()">
-                <label for="doubleWide">Double-Wide (Offset) Mode</label>
+                <label for="doubleWide">Double-Wide (Offset)</label>
             </div>
             <div class="checkbox-group" style="margin-top: 10px;">
                 <input type="checkbox" id="forceMaxSdd" checked onchange="calculate()">
-                <label for="forceMaxSdd">Force Max SDD (Sharpness)</label>
+                <label for="forceMaxSdd">Force Max SDD</label>
             </div>
         </div>
 
         <div id="manualControls" style="display: none;">
              <div class="form-group">
-                <label for="manualSOD">Source-Object Distance (SOD) mm</label>
+                <label for="manualSOD">Source-Object (SOD) mm</label>
                 <input type="number" id="manualSOD" value="100" oninput="calculate()">
             </div>
             <div class="form-group">
-                <label for="manualSDD">Source-Detector Distance (SDD) mm</label>
+                <label for="manualSDD">Source-Detector (SDD) mm</label>
                 <input type="number" id="manualSDD" value="1000" oninput="calculate()">
             </div>
             <div class="checkbox-group" id="manualDoubleWideContainer">
                 <input type="checkbox" id="manualDoubleWide" onchange="calculate()">
-                <label for="manualDoubleWide">Double-Wide (Offset) Mode</label>
+                <label for="manualDoubleWide">Double-Wide (Offset)</label>
             </div>
         </div>
         
         <div id="customInputs" style="display:none; margin-top: 20px;">
             <h2>Manual Intrinsics</h2>
-            <div class="form-group"><label>Detector Pixel Pitch (mm)</label><input type="number" id="c_pitch" value="0.127" step="0.001"></div>
+            <div class="form-group"><label>Pixel Pitch (mm)</label><input type="number" id="c_pitch" value="0.127" step="0.001"></div>
             <div class="form-group"><label>Detector Width (px)</label><input type="number" id="c_width" value="2000"></div>
             <div class="form-group"><label>Min SOD (mm)</label><input type="number" id="c_minSOD" value="10"></div>
             <div class="form-group"><label>Max SOD (mm)</label><input type="number" id="c_maxSOD" value="800"></div>
             <div class="form-group"><label>Max SDD (mm)</label><input type="number" id="c_maxSDD" value="1000"></div>
-            <div class="form-group"><label>Max Sample Diam. (mm)</label><input type="number" id="c_maxDiam" value="300"></div>
-            <div class="checkbox-group" style="margin-bottom: 10px;">
+            <div class="form-group"><label>Max Sample ø (mm)</label><input type="number" id="c_maxDiam" value="300"></div>
+            <div class="checkbox-group" style="margin-bottom: 15px;">
                 <input type="checkbox" id="c_allowDW" checked>
                 <label for="c_allowDW">Supports Double-Wide</label>
             </div>
-            <button class="btn btn-primary" onclick="applyCustom()">Apply Manual Settings</button>
+            <button class="btn btn-primary" onclick="applyCustom()">Apply Settings</button>
         </div>
     </div>
 
@@ -300,14 +370,14 @@
         
         <div class="results-header">
             <div>
-                <h2 style="color: var(--text);">Projected Resolution</h2>
+                <h2 style="color: var(--text); margin-top:0;">Projected Pixel Size</h2>
                 <div class="metric-value" id="resResult">--</div>
                 <div class="metric-label" id="magResult">at --x Magnification</div>
             </div>
             
             <div class="metric-card">
                 <span style="font-size:0.8rem; color:#64748b;">Scan Field of View</span>
-                <strong style="display:block; font-size:1.4rem; color:#1e293b;" id="fovResult">-- mm</strong>
+                <strong style="display:block; font-size:1.6rem; color:#1e293b;" id="fovResult">-- mm</strong>
             </div>
         </div>
 
@@ -316,28 +386,58 @@
         <h2>Geometry Settings</h2>
         <div class="details-grid">
             <div class="detail-item">
-                <span id="sodLabel">Source to Object (SOD)</span>
+                <span id="sodLabel">SOD</span>
                 <strong id="sodResult">-- mm</strong>
             </div>
             <div class="detail-item">
-                <span>Source to Detector (SDD)</span>
+                <span>SDD</span>
                 <strong id="sddResult">-- mm</strong>
             </div>
             <div class="detail-item">
-                <span>Effective Det. Width</span>
+                <span>Eff. Det. Width</span>
                 <strong id="detWidthResult">-- mm</strong>
             </div>
         </div>
 
         <div class="canvas-container">
             <canvas id="geoCanvas"></canvas>
-            <div style="position: absolute; bottom: 10px; right: 10px; font-size: 0.75rem; color: #94a3b8;">
-                *Visualization not to scale
+            <div style="position: absolute; bottom: 8px; right: 12px; font-size: 0.75rem; color: #94a3b8;">
+                *Visualisation not to scale
             </div>
         </div>
 
         <div id="warnAlert" class="alert alert-warning"></div>
         <div id="errAlert" class="alert alert-error"></div>
+
+        <div class="sampling-panel">
+            <div class="sampling-stat">
+                <span class="label">Nyquist Limit (1x)</span>
+                <strong id="stepSize1x">--°</strong>
+                <div class="sub" id="projections1x">-- Proj</div>
+                <div class="res" id="res1x">Res: --</div>
+            </div>
+            <div class="sampling-stat">
+                <span class="label">High Quality (2x)</span>
+                <strong id="stepSize2x">--°</strong>
+                <div class="sub" id="projections2x">-- Proj</div>
+                <div class="res" id="res2x">Res: --</div>
+            </div>
+            <div class="sampling-stat">
+                <span class="label">Fast Scan (3x)</span>
+                <strong id="stepSize3x">--°</strong>
+                <div class="sub" id="projections3x">-- Proj</div>
+                <div class="res" id="res3x">Res: --</div>
+            </div>
+            <div class="sampling-stat" style="background: #eff6ff; border-radius: 6px; border: 1px solid #bfdbfe;">
+                <span class="label" style="color: var(--primary);">Custom Step</span>
+                <div class="custom-input-wrapper">
+                    <input type="number" id="customStep" step="0.01" value="0.25" oninput="calculate()">
+                    <span style="font-size: 0.9rem; font-weight:600; color:var(--primary);">°</span>
+                </div>
+                <div class="sub" id="projectionsCustom">-- Proj</div>
+                <div class="res" id="resCustom">Res: --</div>
+            </div>
+        </div>
 
     </div>
 </div>
@@ -406,7 +506,6 @@
                 let targetSDD = currentSystem.maxSDD;
                 let targetSOD = targetSDD / finalMag;
 
-                // Clamp to physical limits
                 if (targetSOD < currentSystem.minSOD) {
                     targetSOD = currentSystem.minSOD;
                 } else if (targetSOD > currentSystem.maxSOD) {
@@ -414,7 +513,6 @@
                     targetSDD = targetSOD * finalMag; 
                 }
                 
-                // Populate Manual Inputs
                 document.getElementById('manualSOD').value = targetSOD.toFixed(2);
                 document.getElementById('manualSDD').value = targetSDD.toFixed(2);
                 document.getElementById('manualDoubleWide').checked = isDoubleWide;
@@ -423,11 +521,9 @@
 
         calculationMode = mode;
         
-        // Update Buttons
         document.getElementById('btnModeAuto').className = mode === 'auto' ? 'mode-btn active' : 'mode-btn';
         document.getElementById('btnModeManual').className = mode === 'manual' ? 'mode-btn active' : 'mode-btn';
 
-        // Toggle Controls
         document.getElementById('autoControls').style.display = mode === 'auto' ? 'block' : 'none';
         document.getElementById('manualControls').style.display = mode === 'manual' ? 'block' : 'none';
 
@@ -439,7 +535,6 @@
         const select = document.getElementById('systemSelect');
         select.innerHTML = ''; 
         
-        // Default to the first key if nothing selected
         if (!selectedId) {
             selectedId = Object.keys(systems)[0];
         }
@@ -472,7 +567,7 @@
             document.getElementById('c_minSOD').value = currentSystem.minSOD || systems[Object.keys(systems)[0]].minSOD;
             document.getElementById('c_maxSOD').value = currentSystem.maxSOD || systems[Object.keys(systems)[0]].maxSOD;
             document.getElementById('c_maxSDD').value = currentSystem.maxSDD || systems[Object.keys(systems)[0]].maxSDD;
-            document.getElementById('c_maxDiam').value = currentSystem.maxObjectDiameter || ""; // Set manual field
+            document.getElementById('c_maxDiam').value = currentSystem.maxObjectDiameter || "";
             document.getElementById('c_allowDW').checked = currentSystem.hasOwnProperty('allowDoubleWide') ? currentSystem.allowDoubleWide : true;
         } else {
             customDiv.style.display = 'none';
@@ -534,8 +629,7 @@
         const sysId = 'imported_' + Date.now();
         if (!data.name) data.name = "Imported System";
         if (data.allowDoubleWide === undefined) data.allowDoubleWide = false;
-        // maxObjectDiameter is optional, so no check needed
-
+        
         systems[sysId] = data;
         populateDropdown(sysId);
         loadSystemPreset();
@@ -551,7 +645,6 @@
         if (currentSystem.maxObjectDiameter) {
             diamText = `<br>Max Sample ø: ${currentSystem.maxObjectDiameter} mm`;
         }
-        
         div.innerHTML = `
             <strong>${currentSystem.name}</strong><br>
             Panel: ${currentSystem.widthPx}px @ ${currentSystem.pixelPitch}mm<br>
@@ -568,16 +661,14 @@
 
         if (!objDiameter || objDiameter <= 0) return;
 
-        // Container for alerts
+        // Alerts
         let errorMsgs = [];
         let warnMsgs = [];
 
-        // 1. Check system max diameter limit
         if (currentSystem.maxObjectDiameter && objDiameter > currentSystem.maxObjectDiameter) {
             errorMsgs.push(`Error: Object Diameter (${objDiameter} mm) exceeds the system's physical limit (${currentSystem.maxObjectDiameter} mm).`);
         }
 
-        // Determine detector width
         let isDoubleWide = false;
         if (calculationMode === 'auto') {
             isDoubleWide = document.getElementById('doubleWide').checked;
@@ -592,17 +683,13 @@
             activePixels = (currentSystem.widthPx * 2) - (currentSystem.overlapPx || 100);
         }
         const physDetWidth = activePixels * currentSystem.pixelPitch;
-        
-        // Use margin
         const usableDetWidth = physDetWidth * (1 - (marginPercent / 100));
 
         let targetSOD, targetSDD, finalMag;
 
-        // --- BRANCH LOGIC ---
+        // BRANCH LOGIC
         if (calculationMode === 'auto') {
-            // AUTO MODE LOGIC
             const forceMaxSdd = document.getElementById('forceMaxSdd').checked;
-            
             const maxMagFOV = usableDetWidth / objDiameter;
             const maxMagSys = currentSystem.maxSDD / currentSystem.minSOD;
 
@@ -618,7 +705,6 @@
             targetSDD = currentSystem.maxSDD;
             targetSOD = targetSDD / finalMag;
 
-            // Clamp SOD
             if (targetSOD < currentSystem.minSOD) {
                 targetSOD = currentSystem.minSOD;
             } else if (targetSOD > currentSystem.maxSOD) {
@@ -626,17 +712,15 @@
                 targetSDD = targetSOD * finalMag; 
             }
 
-            // Warnings
             if (limitingFactor === "travel") {
                 warnMsgs.push("Note: Resolution is limited by system travel (Min SOD), not object size.");
             }
 
         } else {
-            // MANUAL MODE LOGIC
             targetSOD = parseFloat(document.getElementById('manualSOD').value);
             targetSDD = parseFloat(document.getElementById('manualSDD').value);
 
-            if (!targetSOD || !targetSDD) return; // Wait for input
+            if (!targetSOD || !targetSDD) return; 
 
             if (targetSOD < currentSystem.minSOD || targetSOD > currentSystem.maxSOD) {
                 warnMsgs.push(`Warning: SOD is outside system limits (${currentSystem.minSOD} - ${currentSystem.maxSOD} mm).`);
@@ -651,17 +735,15 @@
             finalMag = targetSDD / targetSOD;
         }
 
-        // --- COMMON RESULTS ---
+        // RESULTS
         const effPixel = currentSystem.pixelPitch / finalMag;
         const fov = physDetWidth / finalMag; 
         const usableFOV = usableDetWidth / finalMag;
 
-        // Collision Check
         if (targetSOD + (objDiameter/2) > targetSDD) {
             errorMsgs.push("Error: Object collision! The object is too large or too close to the detector.");
         }
 
-        // FOV Check (Manual Mode)
         if (calculationMode === 'manual') {
             if (objDiameter > fov) {
                  errorMsgs.push(`Error: Object (${objDiameter}mm) is larger than Field of View (${fov.toFixed(1)}mm).`);
@@ -670,7 +752,6 @@
             }
         }
 
-        // Render Alerts
         const warnEl = document.getElementById('warnAlert');
         const errEl = document.getElementById('errAlert');
         
@@ -690,13 +771,59 @@
             errEl.innerHTML = '';
         }
 
+        // SAMPLING CALCULATIONS
+        const effPixelUm = effPixel * 1000;
+        
+        // 1. Nyquist (1x)
+        const angularStepRad = effPixel / (objDiameter / 2);
+        const angularStepDeg = angularStepRad * (180 / Math.PI);
+        const numProjections = Math.ceil(360 / angularStepDeg);
+
+        // 2. Recommended (2x)
+        const numProjectionsRec = Math.ceil(numProjections / 2);
+        const angularStepDegRec = 360 / numProjectionsRec;
+
+        // 3. Fast (3x)
+        const numProjectionsFast = Math.ceil(numProjections / 3);
+        const angularStepDegFast = 360 / numProjectionsFast;
+
+        // 4. Custom
+        const customStep = parseFloat(document.getElementById('customStep').value);
+        let customProj = "--";
+        let customRes = "--";
+        if (customStep > 0) {
+            customProj = Math.ceil(360 / customStep);
+            
+            // Calc eff resolution based on custom step
+            const arcLength = (objDiameter / 2) * (customStep * (Math.PI / 180));
+            const effResVal = Math.max(effPixel, arcLength);
+            customRes = (effResVal * 1000).toFixed(1) + " µm";
+        }
+
         // Update UI
-        document.getElementById('resResult').textContent = (effPixel * 1000).toFixed(2) + " µm";
+        document.getElementById('resResult').textContent = effPixelUm.toFixed(2) + " µm";
         document.getElementById('magResult').textContent = "at " + finalMag.toFixed(2) + "x Magnification";
         document.getElementById('fovResult').textContent = fov.toFixed(1) + " mm";
         document.getElementById('sodResult').textContent = targetSOD.toFixed(1) + " mm";
         document.getElementById('sddResult').textContent = targetSDD.toFixed(1) + " mm";
         document.getElementById('detWidthResult').textContent = physDetWidth.toFixed(1) + " mm";
+
+        // Update Sampling UI
+        document.getElementById('stepSize1x').textContent = angularStepDeg.toFixed(3) + "°";
+        document.getElementById('projections1x').textContent = numProjections + " Proj";
+        document.getElementById('res1x').textContent = "Res: " + effPixelUm.toFixed(1) + " µm";
+
+        document.getElementById('stepSize2x').textContent = angularStepDegRec.toFixed(3) + "°";
+        document.getElementById('projections2x').textContent = numProjectionsRec + " Proj";
+        document.getElementById('res2x').textContent = "Res: " + (effPixelUm * 2).toFixed(1) + " µm";
+
+        document.getElementById('stepSize3x').textContent = angularStepDegFast.toFixed(3) + "°";
+        document.getElementById('projections3x').textContent = numProjectionsFast + " Proj";
+        document.getElementById('res3x').textContent = "Res: " + (effPixelUm * 3).toFixed(1) + " µm";
+
+        document.getElementById('projectionsCustom').textContent = customProj + " Proj";
+        document.getElementById('resCustom').textContent = "Res: " + customRes;
+
 
         drawVisualizer(targetSOD, targetSDD, objDiameter, physDetWidth, marginPercent);
     }
@@ -722,7 +849,6 @@
 
         const detPxWidth = detWidth * scale;
 
-        // 1. Draw Axis
         ctx.beginPath();
         ctx.setLineDash([5, 5]);
         ctx.strokeStyle = "#cbd5e1";
@@ -731,18 +857,15 @@
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // 2. Draw Source
         ctx.fillStyle = "#f59e0b";
         ctx.beginPath();
         ctx.arc(centerX, sourceY, 6, 0, Math.PI * 2);
         ctx.fill();
 
-        // 3. Draw Detector (Active Area) -- CHANGED TO LIGHT GRAY
         const detX = centerX - (detPxWidth/2);
-        ctx.fillStyle = "#cbd5e1"; // Light Grey
+        ctx.fillStyle = "#cbd5e1"; 
         ctx.fillRect(detX, detY, detPxWidth, 8);
         
-        // 4. Draw Safety Margins (Red Hash)
         if (marginPercent > 0) {
             const sideMarginPx = (detPxWidth * (marginPercent / 100)) / 2;
             ctx.fillStyle = "rgba(239, 68, 68, 0.6)"; 
@@ -750,7 +873,6 @@
             ctx.fillRect(detX + detPxWidth - sideMarginPx, detY, sideMarginPx, 8);
         }
 
-        // 5. Draw Object
         const objPxRadius = (objDiam * scale) / 2;
         ctx.fillStyle = "rgba(37, 99, 235, 0.3)"; 
         ctx.strokeStyle = "#2563eb";
@@ -759,15 +881,13 @@
         ctx.fill();
         ctx.stroke();
 
-        // 6. Draw Projected Shadow on Detector -- DARK, SAME THICKNESS
         const magnification = sdd / sod;
         const shadowRealWidth = objDiam * magnification;
         const shadowPxWidth = shadowRealWidth * scale;
         
-        ctx.fillStyle = "rgba(15, 23, 42, 0.8)"; // Dark Navy/Black
+        ctx.fillStyle = "rgba(15, 23, 42, 0.8)"; 
         ctx.fillRect(centerX - (shadowPxWidth/2), detY, shadowPxWidth, 8);
 
-        // 7. Draw Cone Beam
         ctx.strokeStyle = "rgba(245, 158, 11, 0.4)";
         ctx.beginPath();
         ctx.moveTo(centerX, sourceY);
@@ -776,7 +896,6 @@
         ctx.lineTo(detX + detPxWidth, detY); 
         ctx.stroke();
 
-        // 8. Draw Floating Labels (Distances & Items)
         ctx.fillStyle = "#64748b";
         ctx.font = "12px sans-serif";
         ctx.fillText("Source", centerX + 10, sourceY + 5);
@@ -784,7 +903,6 @@
         ctx.fillStyle = "#2563eb";
         ctx.fillText("Object", centerX + objPxRadius + 5, objY + 5);
 
-        // 9. Draw Legend / Key (Top Left)
         const legendX = 10;
         let legendY = 10;
         const lineHeight = 16;
@@ -817,7 +935,6 @@
         drawLegendItem("rgba(15, 23, 42, 0.8)", "Proj. Shadow", "rect");
     }
 
-    // Init
     window.addEventListener('resize', calculate);
     populateDropdown(); 
     loadSystemPreset(); 
