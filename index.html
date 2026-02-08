@@ -25,6 +25,11 @@
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
+            
+            /* Exact match to Canvas Light Mode */
+            --geo-det: #cbd5e1;
+            --geo-shadow: rgba(15, 23, 42, 0.8); 
+            --geo-shadow-trans: rgba(15, 23, 42, 0);
         }
 
         /* Dark Mode Variables */
@@ -47,6 +52,11 @@
             --success: #34d399;
             --danger: #f87171;
             --warning: #fbbf24;
+
+            /* Exact match to Canvas Dark Mode */
+            --geo-det: #404040;
+            --geo-shadow: rgba(255, 255, 255, 0.2);
+            --geo-shadow-trans: rgba(255, 255, 255, 0);
         }
 
         body {
@@ -115,10 +125,32 @@
 
         h1 { font-size: 1.4rem; margin: 0 0 8px 0; color: var(--primary); font-weight: 700; }
         h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 0; }
-        h3 { font-size: 0.95rem; color: var(--text); margin: 0 0 10px 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
+        
+        h3 { 
+            font-size: 0.95rem; 
+            color: var(--text); 
+            margin: 0 0 10px 0; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+
         p { margin: 0; line-height: 1.5; color: var(--text-secondary); }
 
-        .form-group { margin-bottom: 15px; }
+        .form-group { margin-bottom: 0; }
+        
+        .sidebar-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; 
+        }
+        
+        .manual-wrapper { display: contents; }
+        .manual-wrapper.hidden { display: none; }
+
         label { display: block; font-size: 0.85rem; margin-bottom: 5px; font-weight: 500; color: var(--text); }
         
         select, input[type="number"], input[type="text"] {
@@ -147,7 +179,7 @@
         }
         input[type="checkbox"] { width: 16px; height: 16px; accent-color: var(--primary); }
 
-        .divider { height: 1px; background: var(--border); margin: 10px 0; transition: background 0.2s; }
+        .divider { height: 1px; background: var(--border); margin: 0; transition: background 0.2s; }
         
         .btn {
             width: 100%;
@@ -178,7 +210,6 @@
             background: var(--border);
             padding: 4px;
             border-radius: 8px;
-            margin-bottom: 15px;
             transition: background 0.2s;
         }
         .mode-btn {
@@ -205,7 +236,7 @@
             gap: 20px;
         }
 
-        /* --- UPDATED HERO SECTION --- */
+        /* --- HERO SECTION --- */
         .hero-section { text-align: center; padding-bottom: 10px; position: relative; }
         
         .hero-grid {
@@ -271,8 +302,6 @@
         }
 
         .sampling-grid { grid-template-columns: repeat(4, 1fr); }
-        
-        /* Reverted Source Unsharpness Layout CSS */
         .spot-grid { grid-template-columns: 1fr; gap: 0; } 
 
         .spot-header-row {
@@ -401,12 +430,16 @@
             border-radius: 50%;
             border: 1px solid var(--text-secondary);
             color: var(--text-secondary);
-            font-size: 10px;
+            font-size: 11px;
+            font-family: "Times New Roman", Times, serif;
+            font-style: italic;
             font-weight: bold;
             text-decoration: none;
             cursor: pointer;
             transition: all 0.2s;
             margin-left: 8px;
+            line-height: 1;
+            text-transform: none; 
         }
         .info-link:hover {
             border-color: var(--primary);
@@ -474,8 +507,8 @@
 
         .graphic-container {
             width: 100%;
-            max-width: 600px;
-            height: 200px;
+            max-width: 500px;
+            height: 400px;
             margin: 30px auto;
             display: flex;
             align-items: center;
@@ -512,25 +545,28 @@
             <p style="font-size: 0.8rem;">Estimate CT voxel size and effective resolution based on object size and machine intrinsics.</p>
         </div>
         <div class="divider"></div>
-        <div class="form-group">
-            <label for="systemSelect">CT System</label>
-            <select id="systemSelect" onchange="loadSystemPreset()">
-            </select>
-            <div id="systemParamsDisplay" class="system-params-details"></div>
-        </div>
+        
+        <div class="sidebar-input-group">
+            <div class="form-group">
+                <label for="systemSelect">CT System</label>
+                <select id="systemSelect" onchange="loadSystemPreset()">
+                </select>
+                <div id="systemParamsDisplay" class="system-params-details"></div>
+            </div>
 
-        <div class="form-group" id="spotModeGroup">
-            <label for="spotModeSelect">X-Ray Spot Mode</label>
-            <select id="spotModeSelect" onchange="calculate()">
-            </select>
-        </div>
+            <div class="form-group" id="spotModeGroup">
+                <label for="spotModeSelect">X-Ray Spot Mode</label>
+                <select id="spotModeSelect" onchange="calculate()">
+                </select>
+            </div>
 
-        <div style="margin-top: -5px; margin-bottom: 15px;">
-            <input type="file" id="jsonInput" accept=".json" style="display: none;" onchange="handleFileUpload(this)">
-            <button class="btn btn-outline" onclick="document.getElementById('jsonInput').click()">
-                📂 Load Config JSON
-            </button>
-            <div id="uploadMsg" style="font-size: 0.75rem; margin-top: 5px; color: var(--success); display:none;">Successfully loaded!</div>
+            <div style="margin-top: -5px;">
+                <input type="file" id="jsonInput" accept=".json" style="display: none;" onchange="handleFileUpload(this)">
+                <button class="btn btn-outline" onclick="document.getElementById('jsonInput').click()">
+                    📂 Load Config JSON
+                </button>
+                <div id="uploadMsg" style="font-size: 0.75rem; margin-top: 5px; color: var(--success); display:none;">Successfully loaded!</div>
+            </div>
         </div>
 
         <div class="divider"></div>
@@ -541,53 +577,57 @@
             <div id="btnModeManual" class="mode-btn" onclick="setMode('manual')">Manual</div>
         </div>
 
-        <div class="form-group">
-            <label for="objectDiameter">Object Diameter (mm)</label>
-            <input type="number" id="objectDiameter" value="50" step="1" oninput="calculate()">
-        </div>
-
-        <div class="form-group">
-            <label for="safetyMargin">Detector Margin (%)</label>
-            <input type="number" id="safetyMargin" value="5" min="0" max="50" step="1" oninput="calculate()">
-            <small style="color:var(--text-secondary); font-size:0.75rem;">Buffer space at detector edges.</small>
-        </div>
-
-        <div id="autoControls">
-            <div class="checkbox-group" id="doubleWideContainer">
-                <input type="checkbox" id="doubleWide" onchange="calculate()">
-                <label for="doubleWide">Double-Wide (Offset)</label>
-            </div>
-        </div>
-
-        <div id="manualControls" style="display: none;">
-             <div class="form-group">
-                <label for="manualSOD">Source-Object (SOD) mm</label>
-                <input type="number" id="manualSOD" value="100" oninput="calculate()">
-            </div>
+        <div class="sidebar-input-group">
             <div class="form-group">
-                <label for="manualSDD">Source-Detector (SDD) mm</label>
-                <input type="number" id="manualSDD" value="1000" oninput="calculate()">
+                <label for="objectDiameter">Object Diameter (mm)</label>
+                <input type="number" id="objectDiameter" value="50" step="1" oninput="calculate()">
             </div>
-            <div class="checkbox-group" id="manualDoubleWideContainer">
-                <input type="checkbox" id="manualDoubleWide" onchange="calculate()">
-                <label for="manualDoubleWide">Double-Wide (Offset)</label>
+            
+            <div id="manualControls" class="manual-wrapper hidden">
+                 <div class="form-group">
+                    <label for="manualSOD">Source-Object (SOD) mm</label>
+                    <input type="number" id="manualSOD" value="100" oninput="calculate()">
+                </div>
+                <div class="form-group">
+                    <label for="manualSDD">Source-Detector (SDD) mm</label>
+                    <input type="number" id="manualSDD" value="1000" oninput="calculate()">
+                </div>
+                <div class="checkbox-group" id="manualDoubleWideContainer">
+                    <input type="checkbox" id="manualDoubleWide" onchange="calculate()">
+                    <label for="manualDoubleWide">Double-Wide (Offset)</label>
+                </div>
             </div>
-        </div>
-        
-        <div id="customInputs" style="display:none; margin-top: 20px;">
-            <h2>Manual Intrinsics</h2>
-            <div class="form-group"><label>Pixel Pitch (mm)</label><input type="number" id="c_pitch" value="0.127" step="0.001"></div>
-            <div class="form-group"><label>Detector Width (px)</label><input type="number" id="c_width" value="2000"></div>
-            <div class="form-group"><label>Spot Size (mm)</label><input type="number" id="c_spotSize" value="0.04" step="0.001"></div>
-            <div class="form-group"><label>Min SOD (mm)</label><input type="number" id="c_minSOD" value="10"></div>
-            <div class="form-group"><label>Max SOD (mm)</label><input type="number" id="c_maxSOD" value="800"></div>
-            <div class="form-group"><label>Max SDD (mm)</label><input type="number" id="c_maxSDD" value="1000"></div>
-            <div class="form-group"><label>Max Sample ø (mm)</label><input type="number" id="c_maxDiam" value="300"></div>
-            <div class="checkbox-group" style="margin-bottom: 15px;">
-                <input type="checkbox" id="c_allowDW" checked>
-                <label for="c_allowDW">Supports Double-Wide</label>
+
+            <div class="form-group">
+                <label for="safetyMargin">Detector Margin (%)</label>
+                <input type="number" id="safetyMargin" value="5" min="0" max="50" step="1" oninput="calculate()">
+                <small style="color:var(--text-secondary); font-size:0.75rem;">Buffer space at detector edges.</small>
             </div>
-            <button class="btn btn-primary" onclick="applyCustom()">Apply Settings</button>
+
+            <div id="autoControls">
+                <div class="checkbox-group" id="doubleWideContainer">
+                    <input type="checkbox" id="doubleWide" onchange="calculate()">
+                    <label for="doubleWide">Double-Wide (Offset)</label>
+                </div>
+            </div>
+            
+            <div id="customInputs" style="display:none; margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 15px;">
+                <h2 style="margin-bottom: 15px;">Manual Intrinsics</h2>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div class="form-group"><label>Pixel Pitch (mm)</label><input type="number" id="c_pitch" value="0.127" step="0.001"></div>
+                    <div class="form-group"><label>Detector Width (px)</label><input type="number" id="c_width" value="2000"></div>
+                    <div class="form-group"><label>Spot Size (mm)</label><input type="number" id="c_spotSize" value="0.04" step="0.001"></div>
+                    <div class="form-group"><label>Min SOD (mm)</label><input type="number" id="c_minSOD" value="10"></div>
+                    <div class="form-group"><label>Max SOD (mm)</label><input type="number" id="c_maxSOD" value="800"></div>
+                    <div class="form-group"><label>Max SDD (mm)</label><input type="number" id="c_maxSDD" value="1000"></div>
+                    <div class="form-group"><label>Max Sample ø (mm)</label><input type="number" id="c_maxDiam" value="300"></div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="c_allowDW" checked>
+                        <label for="c_allowDW">Supports Double-Wide</label>
+                    </div>
+                    <button class="btn btn-primary" onclick="applyCustom()">Apply Settings</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -723,7 +763,7 @@
 
 <div class="physics-container">
     <div class="physics-content">
-        <h3>Understanding the Effective Resolution of CT</h3>
+        <h3>Understanding Resolution in Computed Tomography</h3>
         
         <h4 id="primer-mag">Magnification & Voxel Size <a href="#calc-hero" class="back-link">&uarr; Calculator</a></h4>
         <p>
@@ -741,43 +781,49 @@
         </p>
         
         <div class="graphic-container">
-            <svg width="100%" height="100%" viewBox="0 0 300 160" style="overflow:visible;">
+            <svg width="100%" height="100%" viewBox="0 0 300 360" style="overflow:visible;">
                 <defs>
-                   <linearGradient id="beamGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style="stop-color:var(--warning);stop-opacity:0.3" />
-                        <stop offset="100%" style="stop-color:var(--warning);stop-opacity:0.1" />
-                    </linearGradient>
+                   <linearGradient id="penumbraGradLeft" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:var(--geo-shadow-trans)" />
+                        <stop offset="100%" style="stop-color:var(--geo-shadow)" />
+                   </linearGradient>
+                   
+                   <linearGradient id="penumbraGradRight" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:var(--geo-shadow)" />
+                        <stop offset="100%" style="stop-color:var(--geo-shadow-trans)" />
+                   </linearGradient>
                 </defs>
 
-                <rect x="10" y="50" width="12" height="60" fill="var(--warning)" rx="2" />
-                <text x="16" y="45" fill="var(--text)" text-anchor="middle" font-size="10" font-weight="bold">Source</text>
+                <rect x="140" y="20" width="20" height="10" fill="var(--warning)" rx="1" />
+                <text x="130" y="28" fill="var(--text)" text-anchor="end" font-size="12" alignment-baseline="middle" font-weight="bold">Source</text>
 
-                <circle cx="120" cy="80" r="30" fill="var(--primary)" fill-opacity="0.2" stroke="var(--primary)" stroke-width="2" />
-                <text x="120" y="45" fill="var(--text)" text-anchor="middle" font-size="10" font-weight="bold">Object</text>
+                <rect x="120" y="120" width="60" height="10" fill="var(--primary)" rx="2" />
+                <text x="110" y="128" fill="var(--text)" text-anchor="end" font-size="12" alignment-baseline="middle" font-weight="bold">Object</text>
 
-                <rect x="280" y="10" width="8" height="140" fill="var(--text-secondary)" />
-                <text x="284" y="165" fill="var(--text)" text-anchor="middle" font-size="10" font-weight="bold">Detector</text>
+                <rect x="10" y="320" width="280" height="8" fill="var(--geo-det)" rx="2"/>
+                <text x="0" y="328" fill="var(--text)" text-anchor="end" font-size="12" alignment-baseline="middle" font-weight="bold">Detector</text>
 
-                <path d="M 120 80 L 280 40 L 280 120 Z" fill="#000" fill-opacity="0.1" />
+                <line x1="160" y1="30" x2="40" y2="320" stroke="var(--warning)" stroke-width="1" stroke-dasharray="4,4" />
+                <line x1="140" y1="30" x2="260" y2="320" stroke="var(--warning)" stroke-width="1" stroke-dasharray="4,4" />
                 
-                <line x1="22" y1="50" x2="280" y2="20" stroke="var(--warning)" stroke-width="1" stroke-dasharray="2,2" />
-                
-                <line x1="22" y1="110" x2="280" y2="60" stroke="var(--warning)" stroke-width="1" stroke-dasharray="2,2" />
-                
-                <line x1="22" y1="50" x2="280" y2="100" stroke="var(--warning)" stroke-width="1" stroke-dasharray="2,2" />
-                
-                <line x1="22" y1="110" x2="280" y2="140" stroke="var(--warning)" stroke-width="1" stroke-dasharray="2,2" />
+                <line x1="140" y1="30" x2="80" y2="320" stroke="var(--warning)" stroke-width="1.5" />
+                <line x1="160" y1="30" x2="220" y2="320" stroke="var(--warning)" stroke-width="1.5" />
 
-                <rect x="278" y="20" width="12" height="40" fill="url(#beamGrad)" stroke="var(--danger)" stroke-width="1" />
-                
-                <rect x="278" y="100" width="12" height="40" fill="url(#beamGrad)" stroke="var(--danger)" stroke-width="1" />
+                <rect x="80" y="320" width="140" height="8" fill="var(--geo-shadow)" />
 
-                <rect x="278" y="60" width="12" height="40" fill="#333" />
+                <rect x="40" y="320" width="40" height="8" fill="url(#penumbraGradLeft)" />
+                <rect x="220" y="320" width="40" height="8" fill="url(#penumbraGradRight)" />
+
+                <line x1="40" y1="320" x2="40" y2="328" stroke="var(--warning)" stroke-width="1.5" />
+                <line x1="80" y1="320" x2="80" y2="328" stroke="var(--warning)" stroke-width="1.5" />
+                <line x1="220" y1="320" x2="220" y2="328" stroke="var(--warning)" stroke-width="1.5" />
+                <line x1="260" y1="320" x2="260" y2="328" stroke="var(--warning)" stroke-width="1.5" />
+
+                <text x="150" y="345" fill="var(--text)" text-anchor="middle" font-size="10" font-weight="bold">Umbra (Shadow)</text>
                 
-                <text x="260" y="40" fill="var(--danger)" text-anchor="end" font-size="10" font-style="italic">Penumbra (Blur)</text>
-                <text x="260" y="85" fill="var(--text)" text-anchor="end" font-size="10" font-weight="bold">Umbra (Shadow)</text>
-                <text x="260" y="125" fill="var(--danger)" text-anchor="end" font-size="10" font-style="italic">Penumbra (Blur)</text>
-                
+                <text x="60" y="345" fill="var(--text-secondary)" text-anchor="middle" font-size="10" font-style="italic">Penumbra</text>
+                <text x="240" y="345" fill="var(--text-secondary)" text-anchor="middle" font-size="10" font-style="italic">Penumbra</text>
+
             </svg>
         </div>
 
@@ -904,8 +950,16 @@
         
         document.getElementById('btnModeAuto').className = mode === 'auto' ? 'mode-btn active' : 'mode-btn';
         document.getElementById('btnModeManual').className = mode === 'manual' ? 'mode-btn active' : 'mode-btn';
+        
+        // Handle visibility of Manual Controls wrapper
+        const manualWrapper = document.getElementById('manualControls');
+        if (mode === 'manual') {
+            manualWrapper.classList.remove('hidden');
+        } else {
+            manualWrapper.classList.add('hidden');
+        }
+
         document.getElementById('autoControls').style.display = mode === 'auto' ? 'block' : 'none';
-        document.getElementById('manualControls').style.display = mode === 'manual' ? 'block' : 'none';
 
         calculate();
     }
