@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduceLab CT Pixel Calculator</title>
+    <title>EduceLab CT Resolution Calculator</title>
     <style>
         /* Base Variables (Light Mode) */
         :root {
@@ -61,6 +61,7 @@
             min-height: 100vh;
             transition: background-color 0.2s, color 0.2s;
             position: relative;
+            scroll-behavior: smooth;
         }
 
         /* Theme Toggle */
@@ -99,6 +100,7 @@
             border: 1px solid var(--border);
             transition: border-color 0.2s, background-color 0.2s;
             margin-top: 20px;
+            z-index: 10;
         }
 
         .sidebar {
@@ -113,7 +115,7 @@
 
         h1 { font-size: 1.4rem; margin: 0 0 8px 0; color: var(--primary); font-weight: 700; }
         h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 10px; margin-top: 0; }
-        h3 { font-size: 0.95rem; color: var(--text); margin: 0 0 10px 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        h3 { font-size: 0.95rem; color: var(--text); margin: 0 0 10px 0; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; gap: 8px; }
         p { margin: 0; line-height: 1.5; color: var(--text-secondary); }
 
         .form-group { margin-bottom: 15px; }
@@ -203,8 +205,42 @@
             gap: 20px;
         }
 
-        .hero-section { text-align: center; padding-bottom: 10px; }
-        .metric-value { font-size: 2.5rem; font-weight: 700; color: var(--primary); line-height: 1.1; }
+        /* --- UPDATED HERO SECTION --- */
+        .hero-section { text-align: center; padding-bottom: 10px; position: relative; }
+        
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .hero-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-stat h2 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin: 0 0 8px 0;
+            font-weight: 600;
+        }
+
+        .metric-value { 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            line-height: 1.1; 
+        }
+        
+        .val-primary { color: var(--primary); }
+        .val-success { color: var(--success); }
+        .val-warn { color: var(--warning); }
+
         .metric-label { font-size: 1rem; color: var(--text-secondary); margin-top: 5px; }
 
         .geometry-bar {
@@ -235,6 +271,8 @@
         }
 
         .sampling-grid { grid-template-columns: repeat(4, 1fr); }
+        
+        /* Reverted Source Unsharpness Layout CSS */
         .spot-grid { grid-template-columns: 1fr; gap: 0; } 
 
         .spot-header-row {
@@ -353,6 +391,102 @@
             border: 1px solid var(--border);
         }
 
+        /* --- INFO ICONS & LINKS --- */
+        .info-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 1px solid var(--text-secondary);
+            color: var(--text-secondary);
+            font-size: 10px;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 8px;
+        }
+        .info-link:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(37, 99, 235, 0.1);
+        }
+        .back-link {
+            font-size: 0.75rem;
+            float: right;
+            text-decoration: none;
+            color: var(--primary);
+            margin-top: 4px;
+        }
+        .back-link:hover { text-decoration: underline; }
+
+        /* --- PHYSICS SECTION --- */
+        .physics-container {
+            max-width: 1200px;
+            width: 100%;
+            margin-top: 30px;
+            margin-bottom: 40px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 40px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .physics-content h3 {
+            color: var(--primary);
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+        }
+
+        .physics-content h4 {
+            color: var(--text);
+            margin-top: 25px;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+            scroll-margin-top: 20px; 
+        }
+
+        .physics-content p {
+            margin-bottom: 1.2em;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+        
+        .formula-inline {
+            background: var(--panel-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            border: 1px solid var(--border);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .graphic-container {
+            width: 100%;
+            max-width: 600px;
+            height: 200px;
+            margin: 30px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--panel-bg);
+            border-radius: 8px;
+            border: 1px solid var(--panel-border);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
         @media (max-width: 900px) {
             .container { grid-template-columns: 1fr; margin-top: 60px; }
             .geometry-bar { grid-template-columns: 1fr 1fr; }
@@ -360,6 +494,8 @@
             .spot-header-row { grid-template-columns: 1fr; gap: 0; }
             .panel-stat { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px; }
             .panel-stat:last-child { border-bottom: none; margin-bottom: 0; }
+            .physics-container { padding: 25px; }
+            .hero-grid { grid-template-columns: 1fr; gap: 15px; }
         }
     </style>
 </head>
@@ -372,8 +508,8 @@
 <div class="container">
     <div class="sidebar">
         <div>
-            <h1>EduceLab CT Pixel Calculator</h1>
-            <p style="font-size: 0.8rem;">Estimate voxel size based on object size and machine intrinsics.</p>
+            <h1>EduceLab CT Resolution Calculator</h1>
+            <p style="font-size: 0.8rem;">Estimate CT voxel size and effective resolution based on object size and machine intrinsics.</p>
         </div>
         <div class="divider"></div>
         <div class="form-group">
@@ -413,7 +549,7 @@
         <div class="form-group">
             <label for="safetyMargin">Detector Margin (%)</label>
             <input type="number" id="safetyMargin" value="5" min="0" max="50" step="1" oninput="calculate()">
-            <small style="color:var(--text-secondary); font-size:0.75rem;">Buffer space at detector edges. This is divided among both edges (e.g. 5% becomes 2.5% buffer on the left and right).</small>
+            <small style="color:var(--text-secondary); font-size:0.75rem;">Buffer space at detector edges.</small>
         </div>
 
         <div id="autoControls">
@@ -457,9 +593,22 @@
 
     <div class="main-content">
         
-        <div class="hero-section">
-            <h2 style="margin-bottom: 5px;">Projected Pixel Size (Voxel)</h2>
-            <div class="metric-value" id="resResult">--</div>
+        <div class="hero-section" id="calc-hero">
+            <div style="position: absolute; top:0; right:0;">
+                <a href="#primer-mag" class="info-link">i</a>
+            </div>
+            
+            <div class="hero-grid">
+                <div class="hero-stat">
+                    <h2>Voxel Size</h2>
+                    <div class="metric-value val-primary" id="resResult">--</div>
+                </div>
+                <div class="hero-stat">
+                    <h2>Effective Resolution</h2>
+                    <div class="metric-value val-primary" id="heroEffRes">--</div>
+                </div>
+            </div>
+
             <div class="metric-label" id="magResult">at --x Magnification</div>
         </div>
 
@@ -492,8 +641,8 @@
         <div id="warnAlert" class="alert alert-warning"></div>
         <div id="errAlert" class="alert alert-error"></div>
 
-        <div class="panel-container">
-            <h3>Sampling Strategy</h3>
+        <div class="panel-container" id="calc-sampling">
+            <h3>Sampling Strategy <a href="#primer-nyquist" class="info-link">i</a></h3>
             <div class="calc-panel sampling-grid">
                 <div class="panel-stat">
                     <span class="label">Nyquist Limit (1x)</span>
@@ -525,8 +674,8 @@
             </div>
         </div>
 
-        <div class="panel-container">
-            <h3>Source Unsharpness & Effective Resolution</h3>
+        <div class="panel-container" id="calc-unsharpness">
+            <h3>Source Unsharpness & Resolution <a href="#primer-penumbra" class="info-link">i</a></h3>
             <div class="calc-panel spot-grid">
                 
                 <div class="spot-header-row">
@@ -569,6 +718,73 @@
             </div>
         </div>
 
+    </div>
+</div>
+
+<div class="physics-container">
+    <div class="physics-content">
+        <h3>Understanding the Effective Resolution of CT</h3>
+        
+        <h4 id="primer-mag">Magnification & Voxel Size <a href="#calc-hero" class="back-link">&uarr; Calculator</a></h4>
+        <p>
+            The fundamental principle of Cone-Beam CT geometric magnification is simple: objects placed closer to the X-ray source project a larger shadow on the detector. We calculate magnification as <span class="formula-inline">Mag = SDD / SOD</span>. Since the physical pixel pitch of the detector is fixed, increasing magnification spreads the image of a small detail over more pixels. The resulting "effective" pixel size at the object center is called the <strong>Voxel Size</strong>.
+        </p>
+
+        <h4 id="primer-nyquist">Nyquist Sampling <a href="#calc-sampling" class="back-link">&uarr; Calculator</a></h4>
+        <p>
+            Even with perfect geometry, 3D reconstruction requires sufficient data. The Nyquist-Shannon sampling theorem dictates that to resolve a detail of a certain size, you must sample it at least twice. In CT terms, this means taking enough projection images around the 360-degree rotation. The 'Nyquist Limit' calculated above represents the minimum number of projections required to ensure the angular spacing between views at the outer edge of the object is smaller than the voxel size.
+        </p>
+
+        <h4 id="primer-penumbra">The Penumbra Effect (Geometric Unsharpness) <a href="#calc-unsharpness" class="back-link">&uarr; Calculator</a></h4>
+        <p>
+            However, magnification is not free. The X-ray source is not a perfect mathematical point; it has a physical diameter (the 'Spot Size'). As you move the object closer to the source to gain magnification, the finite size of the spot creates a blur at the edges of the object. This shadow blur is known as the <strong>Penumbra</strong> or Geometric Unsharpness (<span class="formula-inline">Ug</span>). If this blur value exceeds your Voxel Size, increasing magnification further will simply result in a larger, blurrier image without revealing more detail.
+        </p>
+        
+        <div class="graphic-container">
+            <svg width="100%" height="100%" viewBox="0 0 300 160" style="overflow:visible;">
+                <defs>
+                   <linearGradient id="beamGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" style="stop-color:var(--warning);stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:var(--warning);stop-opacity:0.1" />
+                    </linearGradient>
+                </defs>
+
+                <rect x="10" y="50" width="12" height="60" fill="var(--warning)" rx="2" />
+                <text x="16" y="45" fill="var(--text)" text-anchor="middle" font-size="10" font-weight="bold">Source</text>
+
+                <circle cx="120" cy="80" r="30" fill="var(--primary)" fill-opacity="0.2" stroke="var(--primary)" stroke-width="2" />
+                <text x="120" y="45" fill="var(--text)" text-anchor="middle" font-size="10" font-weight="bold">Object</text>
+
+                <rect x="280" y="10" width="8" height="140" fill="var(--text-secondary)" />
+                <text x="284" y="165" fill="var(--text)" text-anchor="middle" font-size="10" font-weight="bold">Detector</text>
+
+                <path d="M 120 80 L 280 40 L 280 120 Z" fill="#000" fill-opacity="0.1" />
+                
+                <line x1="22" y1="50" x2="280" y2="20" stroke="var(--warning)" stroke-width="1" stroke-dasharray="2,2" />
+                
+                <line x1="22" y1="110" x2="280" y2="60" stroke="var(--warning)" stroke-width="1" stroke-dasharray="2,2" />
+                
+                <line x1="22" y1="50" x2="280" y2="100" stroke="var(--warning)" stroke-width="1" stroke-dasharray="2,2" />
+                
+                <line x1="22" y1="110" x2="280" y2="140" stroke="var(--warning)" stroke-width="1" stroke-dasharray="2,2" />
+
+                <rect x="278" y="20" width="12" height="40" fill="url(#beamGrad)" stroke="var(--danger)" stroke-width="1" />
+                
+                <rect x="278" y="100" width="12" height="40" fill="url(#beamGrad)" stroke="var(--danger)" stroke-width="1" />
+
+                <rect x="278" y="60" width="12" height="40" fill="#333" />
+                
+                <text x="260" y="40" fill="var(--danger)" text-anchor="end" font-size="10" font-style="italic">Penumbra (Blur)</text>
+                <text x="260" y="85" fill="var(--text)" text-anchor="end" font-size="10" font-weight="bold">Umbra (Shadow)</text>
+                <text x="260" y="125" fill="var(--danger)" text-anchor="end" font-size="10" font-style="italic">Penumbra (Blur)</text>
+                
+            </svg>
+        </div>
+
+        <h4>Total Effective Resolution</h4>
+        <p>
+            Ultimately, the true resolution of your scan is a combination of the digital sampling limit (Voxel Size) and the analog optical blur (Unsharpness). This calculator estimates the <strong>Total Effective Resolution</strong> using the root sum square of both values: <span class="formula-inline">Total = &radic;(Voxel² + Ug²)</span>. This metric helps you identify the "weakest link" in your scan parameters—whether you are limited by the detector pixels or the X-ray spot size.
+        </p>
     </div>
 </div>
 
@@ -997,16 +1213,22 @@
 
         let limitText = "";
         let limitClass = "";
+        let limitClassHero = "val-primary";
         if (UgUm > effPixelUm * 1.1) {
              limitText = "Limited by Spot Size";
              limitClass = "limit-warn";
+             limitClassHero = "val-warn";
         } else {
              limitText = "Limited by Voxel";
              limitClass = "limit-ok";
+             limitClassHero = "val-success";
         }
 
         // Update UI Text
         document.getElementById('resResult').textContent = effPixelUm.toFixed(2) + " µm";
+        document.getElementById('heroEffRes').textContent = totalResUm.toFixed(2) + " µm";
+        document.getElementById('heroEffRes').className = "metric-value " + limitClassHero;
+
         document.getElementById('magResult').textContent = "at " + finalMag.toFixed(2) + "x Magnification";
         document.getElementById('fovResult').textContent = fov.toFixed(1) + " mm";
         document.getElementById('sodResult').textContent = targetSOD.toFixed(1) + " mm";
